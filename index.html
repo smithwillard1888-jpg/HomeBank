@@ -3,813 +3,1515 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BYBTRANS — Real-Time AI Video</title>
+<title>HomeBank — Personal Finance, Reimagined</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0c10;--card:#111318;--card2:#181c24;--border:#ffffff12;
+  --text:#f0f0f0;--muted:#8a8f9a;--accent:#4f8ef7;--green:#22c87a;
+  --red:#f75f5f;--purple:#a78bfa;--amber:#f5a623;
+  --r:14px;--rsm:8px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.5;overflow-x:hidden}
 
-  :root {
-    --bg: #080a0f;
-    --surface: #0e1117;
-    --panel: #131720;
-    --border: #1e2535;
-    --accent: #00f0ff;
-    --accent2: #7b4fff;
-    --live: #00e87a;
-    --text: #e8eaf0;
-    --muted: #5a6280;
-    --danger: #ff4466;
-  }
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;background:rgba(10,12,16,0.7);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:0.5px solid var(--border)}
+.nav-logo{font-size:19px;font-weight:700;letter-spacing:-0.5px;color:var(--text);text-decoration:none}
+.nav-logo span{color:var(--accent)}
+.nav-links{display:flex;gap:4px;align-items:center}
+.nav-link{background:none;border:none;color:var(--muted);font-size:13px;padding:6px 14px;border-radius:var(--rsm);cursor:pointer;font-family:inherit;transition:color .15s,background .15s}
+.nav-link:hover,.nav-link.active{color:var(--text);background:rgba(255,255,255,.07)}
+.btn-ghost{background:rgba(255,255,255,.06);color:var(--text);border:0.5px solid var(--border);padding:7px 18px;border-radius:var(--rsm);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;transition:background .15s;text-decoration:none;display:inline-flex;align-items:center}
+.btn-ghost:hover{background:rgba(255,255,255,.1)}
+.btn-primary{background:var(--accent);color:#fff;border:none;padding:8px 18px;border-radius:var(--rsm);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:opacity .15s,transform .1s;text-decoration:none;display:inline-flex;align-items:center}
+.btn-primary:hover{opacity:.88}
+.btn-primary:active,.btn-ghost:active{transform:scale(.98)}
+.btn-danger{background:var(--red);color:#fff;border:none;padding:8px 18px;border-radius:var(--rsm);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:opacity .15s,transform .1s}
+.btn-danger:hover{opacity:.88}
+.btn-danger:active{transform:scale(.98)}
+.btn-small{padding:5px 12px;font-size:12px}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+/* VIEWS */
+.view{display:none;padding-top:60px}
+.view.active{display:block}
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Space Grotesk', sans-serif;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
+/* LANDING */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:100px 24px 80px;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;z-index:0;background-image:url('https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1800&q=80&auto=format&fit=crop');background-size:cover;background-position:center}
+.hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,12,16,.72) 0%,rgba(10,12,16,.88) 60%,rgba(10,12,16,1) 100%)}
+.hero-content{position:relative;z-index:1}
+.hero-eyebrow{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:20px;opacity:.9}
+.hero-h1{font-size:clamp(40px,7vw,80px);font-weight:700;letter-spacing:-3px;line-height:1.04;max-width:760px;margin:0 auto 22px}
+.hero-h1 em{font-style:normal;color:var(--accent)}
+.hero-sub{font-size:17px;color:var(--muted);max-width:500px;line-height:1.7;margin:0 auto 40px}
+.hero-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.hero-cta .btn-primary{padding:14px 32px;font-size:15px}
+.hero-cta .btn-ghost{padding:13px 28px;font-size:15px}
+.badge-row{display:flex;gap:24px;align-items:center;justify-content:center;margin-top:52px;flex-wrap:wrap}
+.badge{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+.badge i{color:var(--green);font-size:15px}
 
-  header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 18px 32px;
-    border-bottom: 1px solid var(--border);
-    background: var(--surface);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
+.mockup-section{padding:0 24px 80px;position:relative}
+.mockup-section-bg{position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1600&q=70&auto=format&fit=crop');background-size:cover;background-position:center top;opacity:.05;pointer-events:none}
+.mockup-inner{max-width:820px;margin:0 auto;position:relative;z-index:1}
+.mockup-card{background:rgba(17,19,24,.95);border:0.5px solid rgba(255,255,255,.12);border-radius:20px;padding:28px;backdrop-filter:blur(8px)}
+.mockup-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px}
+.mockup-balance{font-size:40px;font-weight:700;letter-spacing:-2px;line-height:1}
+.mockup-balance sub{font-size:16px;color:var(--muted);font-weight:400;letter-spacing:0;vertical-align:super}
+.mock-delta{display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--green);background:rgba(34,200,122,.1);padding:4px 10px;border-radius:20px;margin-top:8px}
+.mock-accounts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px}
+.mock-acc{background:rgba(24,28,36,.8);border-radius:10px;padding:14px 16px;border:0.5px solid var(--border)}
+.mock-acc-name{font-size:11px;color:var(--muted);margin-bottom:5px;font-weight:500}
+.mock-acc-val{font-size:17px;font-weight:700;letter-spacing:-.5px}
+.mock-acc-val.neg{color:var(--red)}
+.mock-txns{display:flex;flex-direction:column;gap:0}
+.mock-txn{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:0.5px solid var(--border)}
+.mock-txn:last-child{border-bottom:none}
+.mock-txn-left{display:flex;align-items:center;gap:12px}
+.mock-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.mock-txn-name{font-size:13px;font-weight:500}
+.mock-txn-cat{font-size:11px;color:var(--muted)}
+.mock-txn-amt{font-size:13px;font-weight:600}
+.mock-txn-amt.pos{color:var(--green)}
+.mock-txn-amt.neg{color:var(--red)}
 
-  .logo {
-    font-family: 'Space Mono', monospace;
-    font-size: 1.25rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    background: linear-gradient(90deg, var(--accent), var(--accent2));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
+.section{padding:80px 24px;max-width:960px;margin:0 auto}
+.section-label{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:14px;text-align:center}
+.section-title{font-size:clamp(28px,4vw,44px);font-weight:700;letter-spacing:-1.5px;text-align:center;margin-bottom:14px;line-height:1.12}
+.section-sub{text-align:center;color:var(--muted);font-size:15px;max-width:500px;margin:0 auto 52px}
 
-  .logo span {
-    font-weight: 400;
-    font-size: 0.75rem;
-    display: block;
-    letter-spacing: 0.2em;
-    background: none;
-    -webkit-text-fill-color: var(--muted);
-  }
+.features-section{position:relative;padding:80px 0}
+.features-bg{position:absolute;inset:0;z-index:0;background-image:url('https://images.unsplash.com/photo-1563986768609-322da13575f3?w=1600&q=70&auto=format&fit=crop');background-size:cover;background-position:center;opacity:.04;pointer-events:none}
+.features-inner{max-width:960px;margin:0 auto;padding:0 24px;position:relative;z-index:1}
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.feat-card{background:rgba(17,19,24,.9);border:0.5px solid var(--border);border-radius:var(--r);padding:26px;backdrop-filter:blur(8px);transition:border-color .2s,transform .2s}
+.feat-card:hover{border-color:rgba(79,142,247,.3);transform:translateY(-2px)}
+.feat-icon{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:18px}
+.feat-title{font-size:15px;font-weight:600;margin-bottom:9px}
+.feat-body{font-size:13px;color:var(--muted);line-height:1.7}
 
-  .status-pill {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 6px 14px;
-    border-radius: 100px;
-    font-size: 0.75rem;
-    font-family: 'Space Mono', monospace;
-    letter-spacing: 0.08em;
-    border: 1px solid var(--border);
-    background: var(--panel);
-  }
+.stats-band{position:relative;padding:72px 24px;overflow:hidden}
+.stats-band-bg{position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=1600&q=70&auto=format&fit=crop');background-size:cover;background-position:center}
+.stats-band-bg::after{content:'';position:absolute;inset:0;background:rgba(10,12,16,.87)}
+.stats-band-inner{position:relative;z-index:1;max-width:800px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:32px;text-align:center}
+.stat-num{font-size:42px;font-weight:700;letter-spacing:-2px;color:var(--accent)}
+.stat-label{font-size:13px;color:var(--muted);margin-top:4px}
 
-  .status-dot {
-    width: 7px; height: 7px;
-    border-radius: 50%;
-    background: var(--muted);
-    transition: background 0.3s;
-  }
+.pricing-section{position:relative;padding:80px 0}
+.pricing-bg{position:absolute;inset:0;z-index:0;background-image:url('https://images.unsplash.com/photo-1579621970795-87facc2f976d?w=1600&q=70&auto=format&fit=crop');background-size:cover;background-position:center;opacity:.04;pointer-events:none}
+.pricing-inner{max-width:800px;margin:0 auto;padding:0 24px;position:relative;z-index:1}
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
+.price-card{background:rgba(17,19,24,.95);border:0.5px solid var(--border);border-radius:var(--r);padding:30px 26px;backdrop-filter:blur(8px)}
+.price-card.featured{border-color:rgba(79,142,247,.4);background:rgba(17,19,24,.95)}
+.price-tier{font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+.price-amt{font-size:40px;font-weight:700;letter-spacing:-2px;margin-bottom:4px}
+.price-period{font-size:13px;color:var(--muted)}
+.price-divider{border:none;border-top:0.5px solid var(--border);margin:22px 0}
+.price-features{list-style:none;display:flex;flex-direction:column;gap:11px;margin-bottom:26px}
+.price-features li{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--muted)}
+.price-features li i{color:var(--green);font-size:15px;flex-shrink:0}
+.price-features li.dim{opacity:.4}
+.price-features li.dim i{color:var(--border)}
+.badge-popular{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);background:rgba(79,142,247,.12);border:0.5px solid rgba(79,142,247,.3);padding:4px 10px;border-radius:20px;display:inline-block;margin-bottom:14px}
+.btn-full{width:100%;padding:13px;font-size:14px;justify-content:center}
 
-  .status-dot.live { background: var(--live); box-shadow: 0 0 8px var(--live); animation: pulse 1.5s infinite; }
-  .status-dot.connecting { background: #ffaa00; animation: pulse 0.8s infinite; }
+.faq-section{padding:80px 24px}
+.faq-list{max-width:660px;margin:0 auto;display:flex;flex-direction:column;gap:3px}
+.faq-item{border:0.5px solid var(--border);border-radius:var(--rsm);overflow:hidden}
+.faq-q{width:100%;background:var(--card);border:none;color:var(--text);font-size:14px;font-weight:500;padding:18px 22px;text-align:left;cursor:pointer;font-family:inherit;display:flex;justify-content:space-between;align-items:center;gap:16px}
+.faq-q:hover{background:var(--card2)}
+.faq-q i{color:var(--muted);font-size:16px;transition:transform .2s;flex-shrink:0}
+.faq-q.open i{transform:rotate(180deg)}
+.faq-a{background:var(--card2);max-height:0;overflow:hidden;transition:max-height .3s ease,padding .25s}
+.faq-a.open{max-height:200px;padding:14px 22px 18px}
+.faq-a p{font-size:13px;color:var(--muted);line-height:1.75}
 
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
-  @keyframes spin { to { transform: rotate(360deg); } }
+footer{border-top:0.5px solid var(--border);padding:40px 24px;text-align:center;position:relative}
+.footer-logo{font-size:20px;font-weight:700;letter-spacing:-.5px;margin-bottom:12px}
+.footer-logo span{color:var(--accent)}
+.footer-links{display:flex;justify-content:center;gap:24px;margin-bottom:20px;flex-wrap:wrap}
+.footer-links a{font-size:13px;color:var(--muted);text-decoration:none;transition:color .15s}
+.footer-links a:hover{color:var(--text)}
+footer p{font-size:12px;color:var(--muted)}
 
-  main {
-    display: grid;
-    grid-template-columns: 1fr 340px;
-    height: calc(100vh - 65px);
-  }
+/* AUTH */
+.auth-wrap{min-height:calc(100vh - 60px);display:flex;align-items:center;justify-content:center;padding:24px;position:relative;overflow:hidden}
+.auth-bg{position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1554224154-26032ffc0d07?w=1400&q=80&auto=format&fit=crop');background-size:cover;background-position:center}
+.auth-bg::after{content:'';position:absolute;inset:0;background:rgba(10,12,16,.8)}
+.auth-card{position:relative;z-index:1;background:rgba(17,19,24,.95);border:0.5px solid var(--border);border-radius:20px;padding:40px;width:100%;max-width:420px;backdrop-filter:blur(20px)}
+.auth-title{font-size:24px;font-weight:700;letter-spacing:-.5px;margin-bottom:6px}
+.auth-sub{font-size:13px;color:var(--muted);margin-bottom:30px}
+.form-group{margin-bottom:16px}
+.form-label{font-size:12px;color:var(--muted);margin-bottom:6px;display:block;font-weight:500;letter-spacing:.3px}
+.form-input{width:100%;background:rgba(255,255,255,.05);border:0.5px solid var(--border);border-radius:var(--rsm);padding:11px 14px;color:var(--text);font-size:14px;outline:none;transition:border-color .15s;font-family:inherit}
+.form-input:focus{border-color:var(--accent)}
+.form-input::placeholder{color:var(--muted)}
+.auth-toggle{text-align:center;margin-top:22px;font-size:13px;color:var(--muted)}
+.auth-toggle button{background:none;border:none;color:var(--accent);cursor:pointer;font-size:13px;font-family:inherit}
+.auth-divider{display:flex;align-items:center;gap:14px;margin:22px 0}
+.auth-divider hr{flex:1;border:none;border-top:0.5px solid var(--border)}
+.auth-divider span{font-size:12px;color:var(--muted)}
 
-  .video-section {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1px;
-    background: var(--border);
-    border-right: 1px solid var(--border);
-  }
+/* DASHBOARD */
+.dash-wrap{padding:28px 24px;max-width:1040px;margin:0 auto}
+.dash-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:28px;flex-wrap:wrap;gap:16px}
+.dash-greeting{font-size:24px;font-weight:700;letter-spacing:-.5px}
+.dash-date{font-size:13px;color:var(--muted);margin-top:3px}
+.dash-tabs{display:flex;gap:3px;background:var(--card);border:0.5px solid var(--border);border-radius:var(--rsm);padding:3px}
+.dash-tab{background:none;border:none;color:var(--muted);font-size:12px;font-weight:500;padding:6px 14px;border-radius:5px;cursor:pointer;font-family:inherit;transition:all .15s}
+.dash-tab.active{background:rgba(255,255,255,.1);color:var(--text)}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:20px}
+.kpi{background:var(--card);border:0.5px solid var(--border);border-radius:var(--r);padding:18px 20px}
+.kpi-label{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.9px;margin-bottom:10px}
+.kpi-val{font-size:26px;font-weight:700;letter-spacing:-1px}
+.kpi-delta{font-size:11px;margin-top:5px;display:flex;align-items:center;gap:3px}
+.kpi-delta.up{color:var(--green)}
+.kpi-delta.down{color:var(--red)}
+.dash-grid{display:grid;grid-template-columns:1fr 340px;gap:16px;margin-bottom:20px}
+.dash-panel{background:var(--card);border:0.5px solid var(--border);border-radius:var(--r);padding:22px}
+.panel-title{font-size:13px;font-weight:600;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center}
+.panel-title .panel-sub{color:var(--muted);font-size:11px;font-weight:400}
+.chart-area{height:200px;position:relative}
+.txn-list{display:flex;flex-direction:column}
+.txn-row{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:0.5px solid var(--border)}
+.txn-row:last-child{border-bottom:none}
+.txn-left{display:flex;align-items:center;gap:11px}
+.txn-icon2{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.txn-name{font-size:13px;font-weight:500}
+.txn-meta{font-size:11px;color:var(--muted)}
+.txn-right{text-align:right}
+.txn-amt{font-size:13px;font-weight:600}
+.txn-amt.pos{color:var(--green)}
+.txn-amt.neg{color:var(--red)}
+.txn-date{font-size:11px;color:var(--muted)}
+.budget-list{display:flex;flex-direction:column;gap:18px}
+.budget-item-row{display:flex;flex-direction:column;gap:6px}
+.budget-item-header{display:flex;justify-content:space-between;align-items:center}
+.budget-name{font-size:13px;font-weight:500}
+.budget-vals{font-size:11px;color:var(--muted)}
+.budget-track{height:5px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden}
+.budget-fill{height:100%;border-radius:3px;transition:width .8s cubic-bezier(.25,.46,.45,.94)}
+.accounts-list{display:flex;flex-direction:column;gap:10px}
+.acc-row{display:flex;align-items:center;justify-content:space-between;background:var(--card2);border-radius:var(--rsm);padding:14px 16px;border:0.5px solid var(--border);transition:border-color .15s}
+.acc-row:hover{border-color:rgba(255,255,255,.2)}
+.acc-left{display:flex;align-items:center;gap:12px}
+.acc-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.acc-name{font-size:13px;font-weight:500}
+.acc-type{font-size:11px;color:var(--muted)}
+.acc-bal{font-size:16px;font-weight:700;letter-spacing:-.5px}
+.acc-bal.neg{color:var(--red)}
+.pie-wrap{display:flex;justify-content:center;margin-bottom:14px}
+.pie-legend{display:flex;flex-direction:column;gap:9px}
+.pie-leg-row{display:flex;align-items:center;justify-content:space-between;font-size:12px}
+.pie-leg-left{display:flex;align-items:center;gap:7px}
+.pie-leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 
-  .video-pane {
-    background: var(--bg);
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+/* ADMIN PANEL */
+.admin-wrap{padding:28px 24px;max-width:1200px;margin:0 auto}
+.admin-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;flex-wrap:wrap;gap:16px}
+.admin-title{font-size:24px;font-weight:700;letter-spacing:-.5px;display:flex;align-items:center;gap:10px}
+.admin-badge{background:var(--red);color:#fff;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 8px;border-radius:4px}
+.admin-grid{display:grid;grid-template-columns:280px 1fr;gap:20px}
+.admin-sidebar{background:var(--card);border:0.5px solid var(--border);border-radius:var(--r);padding:20px;height:fit-content;position:sticky;top:80px}
+.admin-sidebar-title{font-size:13px;font-weight:600;margin-bottom:14px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.admin-user-list{display:flex;flex-direction:column;gap:6px}
+.admin-user-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--rsm);cursor:pointer;transition:background .15s;border:0.5px solid transparent}
+.admin-user-item:hover{background:var(--card2)}
+.admin-user-item.active{background:rgba(79,142,247,.12);border-color:rgba(79,142,247,.3)}
+.admin-user-avatar{width:32px;height:32px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:#fff;flex-shrink:0}
+.admin-user-info{flex:1;min-width:0}
+.admin-user-name{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.admin-user-email{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.admin-user-status{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.admin-user-status.online{background:var(--green)}
+.admin-user-status.offline{background:var(--muted)}
 
-  .video-pane video, .video-pane canvas {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+.admin-main{background:var(--card);border:0.5px solid var(--border);border-radius:var(--r);padding:24px}
+.admin-section{margin-bottom:28px}
+.admin-section:last-child{margin-bottom:0}
+.admin-section-title{font-size:15px;font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.admin-section-title i{color:var(--accent);font-size:16px}
 
-  .pane-label {
-    position: absolute;
-    top: 14px; left: 14px;
-    font-family: 'Space Mono', monospace;
-    font-size: 0.65rem;
-    letter-spacing: 0.15em;
-    padding: 4px 10px;
-    border-radius: 4px;
-    background: rgba(8,10,15,0.75);
-    border: 1px solid var(--border);
-    color: var(--muted);
-    text-transform: uppercase;
-    z-index: 2;
-  }
+.admin-form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.admin-form-group{display:flex;flex-direction:column;gap:5px}
+.admin-form-label{font-size:12px;color:var(--muted);font-weight:500}
+.admin-form-input,.admin-form-select{width:100%;background:rgba(255,255,255,.05);border:0.5px solid var(--border);border-radius:var(--rsm);padding:9px 12px;color:var(--text);font-size:13px;outline:none;transition:border-color .15s;font-family:inherit}
+.admin-form-input:focus,.admin-form-select:focus{border-color:var(--accent)}
+.admin-form-input::placeholder{color:var(--muted)}
+.admin-form-select option{background:var(--card);color:var(--text)}
 
-  .pane-label.transformed { color: var(--accent); border-color: var(--accent); }
+.admin-table{width:100%;border-collapse:collapse;font-size:13px}
+.admin-table th{text-align:left;padding:10px 12px;color:var(--muted);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.5px;border-bottom:0.5px solid var(--border)}
+.admin-table td{padding:10px 12px;border-bottom:0.5px solid var(--border);vertical-align:middle}
+.admin-table tr:last-child td{border-bottom:none}
+.admin-table tr:hover td{background:rgba(255,255,255,.02)}
+.admin-table input{background:rgba(255,255,255,.05);border:0.5px solid var(--border);border-radius:var(--rsm);padding:6px 10px;color:var(--text);font-size:13px;outline:none;font-family:inherit;width:100%}
+.admin-table input:focus{border-color:var(--accent)}
+.admin-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.admin-stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:20px}
+.admin-stat{background:var(--card2);border:0.5px solid var(--border);border-radius:var(--rsm);padding:14px 16px}
+.admin-stat-label{font-size:11px;color:var(--muted);margin-bottom:6px}
+.admin-stat-val{font-size:20px;font-weight:700;letter-spacing:-.5px}
+.admin-stat-val.pos{color:var(--green)}
+.admin-stat-val.neg{color:var(--red)}
 
-  .video-placeholder {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 14px;
-    color: var(--muted);
-    text-align: center;
-    padding: 32px;
-    position: absolute;
-    inset: 0;
-    background: var(--bg);
-  }
+.admin-tabs{display:flex;gap:3px;margin-bottom:20px;border-bottom:0.5px solid var(--border);padding-bottom:3px}
+.admin-tab{background:none;border:none;color:var(--muted);font-size:13px;font-weight:500;padding:8px 16px;border-radius:var(--rsm) var(--rsm) 0 0;cursor:pointer;font-family:inherit;transition:all .15s;border-bottom:2px solid transparent;margin-bottom:-3px}
+.admin-tab:hover{color:var(--text)}
+.admin-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
 
-  .video-placeholder svg { opacity: 0.3; }
-  .video-placeholder p { font-size: 0.8rem; line-height: 1.6; }
+.admin-empty{text-align:center;padding:40px 20px;color:var(--muted)}
+.admin-empty i{font-size:40px;margin-bottom:12px;display:block;color:var(--border)}
 
-  /* fps badge */
-  .fps-badge {
-    position: absolute;
-    bottom: 14px; right: 14px;
-    font-family: 'Space Mono', monospace;
-    font-size: 0.6rem;
-    padding: 3px 8px;
-    border-radius: 4px;
-    background: rgba(8,10,15,0.75);
-    border: 1px solid var(--border);
-    color: var(--muted);
-    display: none;
-  }
+/* TOAST */
+.toast-container{position:fixed;top:72px;right:20px;z-index:999;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{background:rgba(17,19,24,.98);border:0.5px solid var(--border);border-radius:var(--rsm);padding:12px 18px;min-width:260px;max-width:340px;box-shadow:0 8px 32px rgba(0,0,0,.4);backdrop-filter:blur(12px);display:flex;align-items:center;gap:10px;animation:toastIn .3s ease,toastOut .3s ease 3.7s forwards;pointer-events:auto}
+.toast.success{border-left:3px solid var(--green)}
+.toast.info{border-left:3px solid var(--accent)}
+.toast.error{border-left:3px solid var(--red)}
+.toast-icon{font-size:18px;flex-shrink:0}
+.toast-content{flex:1}
+.toast-title{font-size:13px;font-weight:600;margin-bottom:2px}
+.toast-msg{font-size:12px;color:var(--muted);line-height:1.4}
+@keyframes toastIn{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}
+@keyframes toastOut{from{opacity:1;transform:translateX(0)}to{opacity:0;transform:translateX(40px)}}
 
-  .sidebar {
-    background: var(--surface);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-
-  .sidebar-section {
-    padding: 20px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .sidebar-section.grow {
-    flex: 1;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .section-label {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.6rem;
-    letter-spacing: 0.2em;
-    color: var(--muted);
-    text-transform: uppercase;
-    margin-bottom: 12px;
-  }
-
-  .input-row { display: flex; gap: 8px; }
-
-  input[type="text"], input[type="password"] {
-    flex: 1;
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 10px 14px;
-    color: var(--text);
-    font-family: 'Space Mono', monospace;
-    font-size: 0.75rem;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-
-  input:focus { border-color: var(--accent); }
-
-  .btn {
-    padding: 10px 18px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 600;
-    transition: all 0.15s;
-    white-space: nowrap;
-  }
-
-  .btn-primary {
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    color: #000;
-  }
-
-  .btn-primary:hover { opacity: 0.85; transform: translateY(-1px); }
-  .btn-ghost {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    color: var(--text);
-  }
-  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
-  .btn-danger { background: transparent; border: 1px solid var(--danger); color: var(--danger); }
-  .btn-danger:hover { background: var(--danger); color: #fff; }
-  .btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none !important; }
-  .btn-full { width: 100%; }
-
-  .control-row { display: flex; gap: 8px; }
-
-  textarea {
-    flex: 1;
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 10px 14px;
-    color: var(--text);
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 0.85rem;
-    resize: none;
-    outline: none;
-    line-height: 1.5;
-    transition: border-color 0.2s;
-    min-height: 68px;
-    width: 100%;
-  }
-
-  textarea:focus { border-color: var(--accent); }
-  textarea::placeholder { color: var(--muted); }
-
-  .prompt-area { display: flex; flex-direction: column; gap: 10px; }
-
-  .active-prompt {
-    display: none;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 14px;
-    background: rgba(0,240,255,0.06);
-    border: 1px solid rgba(0,240,255,0.2);
-    border-radius: 8px;
-    font-size: 0.78rem;
-    margin-bottom: 10px;
-  }
-  .active-prompt.visible { display: flex; }
-  .active-prompt-text { flex: 1; color: var(--accent); font-style: italic; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .clear-btn { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 1rem; padding: 0; line-height: 1; flex-shrink: 0; }
-  .clear-btn:hover { color: var(--danger); }
-
-  .quick-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 7px;
-  }
-
-  .quick-btn {
-    padding: 9px 10px;
-    border-radius: 8px;
-    background: var(--panel);
-    border: 1px solid var(--border);
-    color: var(--text);
-    font-size: 0.75rem;
-    cursor: pointer;
-    text-align: left;
-    transition: all 0.15s;
-    font-family: 'Space Grotesk', sans-serif;
-    line-height: 1.4;
-  }
-
-  .quick-btn:hover { border-color: var(--accent2); color: var(--accent); background: rgba(123,79,255,0.08); }
-  .quick-btn.active { border-color: var(--accent); background: rgba(0,240,255,0.08); color: var(--accent); }
-  .quick-btn span { display: block; font-size: 1rem; margin-bottom: 3px; }
-
-  .add-quick { display: flex; gap: 7px; margin-top: 10px; }
-  .add-quick input { font-size: 0.75rem; padding: 8px 10px; }
-  .add-quick .btn { padding: 8px 12px; font-size: 0.78rem; }
-
-  .log-area {
-    flex: 1;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  .log-entry {
-    font-family: 'Space Mono', monospace;
-    font-size: 0.62rem;
-    color: var(--muted);
-    padding: 3px 0;
-    border-bottom: 1px solid rgba(30,37,53,0.4);
-    display: flex;
-    gap: 8px;
-  }
-
-  .log-entry .time { color: var(--accent2); opacity: 0.7; flex-shrink: 0; }
-  .log-entry.success .msg { color: var(--live); }
-  .log-entry.error .msg { color: var(--danger); }
-  .log-entry.info .msg { color: var(--accent); }
-
-  .connecting-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(8,10,15,0.85);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    gap: 14px;
-    backdrop-filter: blur(4px);
-    z-index: 5;
-  }
-  .connecting-overlay.visible { display: flex; }
-  .spinner { width: 36px; height: 36px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; }
-  .connecting-overlay p { font-family: 'Space Mono', monospace; font-size: 0.72rem; color: var(--muted); letter-spacing: 0.1em; }
-
-  .toast {
-    position: fixed;
-    bottom: 24px; left: 50%;
-    transform: translateX(-50%) translateY(80px);
-    background: var(--panel);
-    border: 1px solid var(--danger);
-    color: var(--danger);
-    padding: 12px 22px;
-    border-radius: 10px;
-    font-size: 0.82rem;
-    font-family: 'Space Mono', monospace;
-    transition: transform 0.3s ease;
-    z-index: 999;
-    max-width: 440px;
-    text-align: center;
-  }
-  .toast.show { transform: translateX(-50%) translateY(0); }
-
-  /* strength slider */
-  .slider-row { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
-  .slider-row label { font-size: 0.72rem; color: var(--muted); white-space: nowrap; }
-  input[type=range] { flex: 1; accent-color: var(--accent); }
-  .slider-val { font-family: 'Space Mono', monospace; font-size: 0.72rem; color: var(--accent); min-width: 28px; text-align: right; }
-
-  ::-webkit-scrollbar { width: 4px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-
-  @media (max-width: 900px) {
-    main { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
-    .video-section { height: 50vw; min-height: 240px; }
-  }
+@media(max-width:900px){
+  .admin-grid{grid-template-columns:1fr}
+  .admin-sidebar{position:static}
+}
+@media(max-width:720px){
+  nav{padding:0 16px}
+  .nav-link{display:none}
+  .dash-grid{grid-template-columns:1fr}
+  .mock-accounts{grid-template-columns:1fr 1fr}
+  .hero-h1{letter-spacing:-2px}
+  .stats-band-inner{grid-template-columns:repeat(2,1fr)}
+  .toast-container{right:12px;left:12px;max-width:none}
+  .toast{max-width:none}
+  .admin-form-grid{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
 
-<header>
-  <div class="logo">
-    BYBTRANS
-    <span>REAL-TIME AI VIDEO · FAL.AI</span>
+<div class="toast-container" id="toastContainer"></div>
+
+<nav>
+  <a href="#" class="nav-logo" onclick="showView('landing');return false">home<span>bank</span></a>
+  <div class="nav-links">
+    <button class="nav-link" onclick="showView('landing')">Home</button>
+    <button class="nav-link" onclick="showView('landing');setTimeout(()=>document.getElementById('features').scrollIntoView({behavior:'smooth'}),50)">Features</button>
+    <button class="nav-link" onclick="showView('landing');setTimeout(()=>document.getElementById('pricing').scrollIntoView({behavior:'smooth'}),50)">Pricing</button>
+    <button class="nav-link" onclick="showView('dashboard')" style="margin-right:8px">Dashboard</button>
+    <button class="nav-link" onclick="showView('admin')" id="adminNavBtn" style="display:none;margin-right:8px">Admin</button>
+    <button class="btn-ghost" onclick="showView('auth','signin')" style="margin-right:8px">Sign in</button>
+    <button class="btn-primary" onclick="showView('auth','signup')">Get started</button>
   </div>
-  <div class="status-pill">
-    <div class="status-dot" id="statusDot"></div>
-    <span id="statusText">OFFLINE</span>
+</nav>
+
+<div class="view active" id="view-landing">
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">Personal Finance &middot; Reimagined</div>
+      <h1 class="hero-h1">Your money,<br><em>finally clear.</em></h1>
+      <p class="hero-sub">Track accounts, plan budgets, and understand your spending &mdash; all in one place. Privacy-first, beautifully designed.</p>
+      <div class="hero-cta">
+        <button class="btn-primary" onclick="showView('auth','signup')">Start for free</button>
+        <button class="btn-ghost" onclick="showView('dashboard')">View demo &rarr;</button>
+      </div>
+      <div class="badge-row">
+        <div class="badge"><i class="ti ti-shield-check"></i>Privacy-first</div>
+        <div class="badge"><i class="ti ti-devices"></i>All devices</div>
+        <div class="badge"><i class="ti ti-infinity"></i>Free core features</div>
+        <div class="badge"><i class="ti ti-lock-open"></i>No credit card needed</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="mockup-section">
+    <div class="mockup-section-bg"></div>
+    <div class="mockup-inner">
+      <div class="mockup-card">
+        <div class="mockup-header">
+          <div>
+            <div style="font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:500;letter-spacing:.3px">NET WORTH</div>
+            <div class="mockup-balance"><sub>&euro;</sub>28,450<span style="font-size:20px;color:var(--muted);font-weight:400">.00</span></div>
+            <div class="mock-delta"><i class="ti ti-trending-up" style="font-size:13px"></i> +&euro;1,240 this month</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:12px;color:var(--muted);margin-bottom:4px">June 2026</div>
+            <div style="font-size:12px;color:var(--green)">On track &check;</div>
+          </div>
+        </div>
+        <div class="mock-accounts">
+          <div class="mock-acc"><div class="mock-acc-name">Checking</div><div class="mock-acc-val">&euro;4,820</div></div>
+          <div class="mock-acc"><div class="mock-acc-name">Savings</div><div class="mock-acc-val">&euro;18,300</div></div>
+          <div class="mock-acc"><div class="mock-acc-name">Credit card</div><div class="mock-acc-val neg">&minus;&euro;670</div></div>
+        </div>
+        <div class="mock-txns">
+          <div class="mock-txn">
+            <div class="mock-txn-left"><div class="mock-icon" style="background:rgba(79,142,247,.14)">&#x1F6D2;</div><div><div class="mock-txn-name">Rewe</div><div class="mock-txn-cat">Groceries &middot; Today</div></div></div>
+            <div class="mock-txn-amt neg">&minus;&euro;54.20</div>
+          </div>
+          <div class="mock-txn">
+            <div class="mock-txn-left"><div class="mock-icon" style="background:rgba(34,200,122,.12)">&#x1F4B0;</div><div><div class="mock-txn-name">Salary transfer</div><div class="mock-txn-cat">Income &middot; 27 Jun</div></div></div>
+            <div class="mock-txn-amt pos">+&euro;3,200</div>
+          </div>
+          <div class="mock-txn">
+            <div class="mock-txn-left"><div class="mock-icon" style="background:rgba(167,139,250,.12)">&#x1F3B5;</div><div><div class="mock-txn-name">Spotify</div><div class="mock-txn-cat">Subscriptions &middot; 26 Jun</div></div></div>
+            <div class="mock-txn-amt neg">&minus;&euro;9.99</div>
+          </div>
+          <div class="mock-txn">
+            <div class="mock-txn-left"><div class="mock-icon" style="background:rgba(245,166,35,.12)">&#x2615;</div><div><div class="mock-txn-name">Coffee Collective</div><div class="mock-txn-cat">Dining out &middot; 26 Jun</div></div></div>
+            <div class="mock-txn-amt neg">&minus;&euro;4.80</div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-</header>
 
-<main>
-  <div class="video-section">
-    <!-- Original -->
-    <div class="video-pane">
-      <div class="video-placeholder" id="localPlaceholder">
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 10l4.553-2.069A1 1 0 0121 8.82v6.36a1 1 0 01-1.447.89L15 14M3 8a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z"/></svg>
-        <p>Your webcam<br>appears here</p>
-      </div>
-      <video id="localVideo" autoplay muted playsinline style="display:none"></video>
-      <div class="pane-label">ORIGINAL</div>
+  <div class="stats-band">
+    <div class="stats-band-bg"></div>
+    <div class="stats-band-inner">
+      <div><div class="stat-num">50k+</div><div class="stat-label">Active users</div></div>
+      <div><div class="stat-num">7</div><div class="stat-label">Import formats</div></div>
+      <div><div class="stat-num">&euro;0</div><div class="stat-label">Core features forever</div></div>
+      <div><div class="stat-num">100%</div><div class="stat-label">Private by default</div></div>
     </div>
+  </div>
 
-    <!-- Transformed -->
-    <div class="video-pane">
-      <div class="video-placeholder" id="remotePlaceholder">
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
-        <p>AI-transformed output<br>streams here</p>
-      </div>
-      <canvas id="outputCanvas" style="display:none"></canvas>
-      <div class="pane-label transformed">TRANSFORMED</div>
-      <div id="errorOverlay" style="display:none;position:absolute;bottom:14px;left:14px;right:14px;background:rgba(255,40,70,0.15);border:1px solid #ff4466;border-radius:8px;padding:10px 14px;font-family:monospace;font-size:0.7rem;color:#ff4466;z-index:10;word-break:break-all;"></div>
-      <div class="fps-badge" id="fpsBadge">0 FPS</div>
-      <div class="connecting-overlay" id="connectingOverlay">
-        <div class="spinner"></div>
-        <p id="connectingMsg">STARTING...</p>
+  <div class="features-section" id="features">
+    <div class="features-bg"></div>
+    <div class="features-inner">
+      <div class="section-label">Features</div>
+      <h2 class="section-title" style="text-align:center;letter-spacing:-1.5px;font-size:clamp(28px,4vw,44px);margin-bottom:14px">Everything you need.<br>Nothing you do not.</h2>
+      <p class="section-sub" style="text-align:center;color:var(--muted);font-size:15px;max-width:480px;margin:0 auto 52px">Built for people who want clarity without complexity &mdash; on any device.</p>
+      <div class="features-grid">
+        <div class="feat-card">
+          <div class="feat-icon" style="background:rgba(79,142,247,.14);color:var(--accent)"><i class="ti ti-layers-intersect"></i></div>
+          <div class="feat-title">All accounts, one view</div>
+          <div class="feat-body">Bank accounts, credit cards, cash, and investments &mdash; one unified balance at a glance, updated in real time.</div>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon" style="background:rgba(34,200,122,.12);color:var(--green)"><i class="ti ti-chart-pie"></i></div>
+          <div class="feat-title">Spending insights</div>
+          <div class="feat-body">Beautiful charts that reveal where your money actually goes, automatically categorised with merchant recognition.</div>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon" style="background:rgba(245,166,35,.12);color:var(--amber)"><i class="ti ti-wallet"></i></div>
+          <div class="feat-title">Envelope budgeting</div>
+          <div class="feat-body">Set monthly budgets per category with pace tracking, over-budget alerts, and rollover carry-over.</div>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon" style="background:rgba(167,139,250,.12);color:var(--purple)"><i class="ti ti-shield-lock"></i></div>
+          <div class="feat-title">Privacy by design</div>
+          <div class="feat-body">Your data stays yours. No selling, no harvesting. Local-first with optional end-to-end encrypted sync.</div>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon" style="background:rgba(79,142,247,.14);color:var(--accent)"><i class="ti ti-repeat"></i></div>
+          <div class="feat-title">Recurring transactions</div>
+          <div class="feat-body">Automatic detection of subscriptions and bills with cash flow forecasting so you stay ahead.</div>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon" style="background:rgba(34,200,122,.12);color:var(--green)"><i class="ti ti-file-import"></i></div>
+          <div class="feat-title">Import from anywhere</div>
+          <div class="feat-body">QIF, OFX, CSV, MT940, CAMT.053 and more. Auto-detects formats from Revolut, N26, Wise, ING, BBVA.</div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- SIDEBAR -->
-  <div class="sidebar">
-
-    <!-- API KEY -->
-    <div class="sidebar-section">
-      <div class="section-label">Fal.ai API Key</div>
-      <div class="input-row">
-        <input type="password" id="apiKeyInput" placeholder="fal_key_..." autocomplete="off">
-        <button class="btn btn-ghost" onclick="toggleKey()" title="Show/hide">👁</button>
+  <div class="pricing-section" id="pricing">
+    <div class="pricing-bg"></div>
+    <div class="pricing-inner">
+      <div class="section-label" style="text-align:center">Pricing</div>
+      <h2 class="section-title" style="text-align:center;letter-spacing:-1.5px;font-size:clamp(28px,4vw,44px);margin-bottom:14px">Simple, honest pricing.</h2>
+      <p class="section-sub" style="text-align:center;color:var(--muted);font-size:15px;max-width:480px;margin:0 auto 52px">Core features are free forever. Upgrade when you are ready.</p>
+      <div class="pricing-grid">
+        <div class="price-card">
+          <div class="price-tier">Free</div>
+          <div class="price-amt">&euro;0</div>
+          <div class="price-period">forever &middot; no card needed</div>
+          <hr class="price-divider">
+          <ul class="price-features">
+            <li><i class="ti ti-check"></i>Unlimited accounts</li>
+            <li><i class="ti ti-check"></i>Unlimited transactions</li>
+            <li><i class="ti ti-check"></i>7 import formats</li>
+            <li><i class="ti ti-check"></i>Envelope setup</li>
+            <li><i class="ti ti-check"></i>Multi-currency</li>
+            <li class="dim"><i class="ti ti-x"></i>Budget pace &amp; alerts</li>
+            <li class="dim"><i class="ti ti-x"></i>Advanced reports &amp; PDF</li>
+            <li class="dim"><i class="ti ti-x"></i>Encrypted cloud sync</li>
+          </ul>
+          <button class="btn-ghost btn-full" onclick="showView('auth','signup')">Get started free</button>
+        </div>
+        <div class="price-card featured">
+          <div class="badge-popular">Most popular</div>
+          <div class="price-tier" style="color:var(--accent)">Premium</div>
+          <div class="price-amt">&euro;3.99</div>
+          <div class="price-period">per month &middot; billed annually</div>
+          <hr class="price-divider">
+          <ul class="price-features">
+            <li><i class="ti ti-check"></i>Everything in Free</li>
+            <li><i class="ti ti-check"></i>Budget pace &amp; alerts</li>
+            <li><i class="ti ti-check"></i>Rollover &amp; auto-allocation</li>
+            <li><i class="ti ti-check"></i>Advanced reports &amp; PDF export</li>
+            <li><i class="ti ti-check"></i>Encrypted cloud sync</li>
+            <li><i class="ti ti-check"></i>Family sharing (up to 5)</li>
+            <li><i class="ti ti-check"></i>Smart suggestions &amp; crypto</li>
+            <li><i class="ti ti-check"></i>Priority support</li>
+          </ul>
+          <button class="btn-primary btn-full" onclick="showView('auth','signup')">Start 14-day free trial</button>
+        </div>
       </div>
     </div>
-
-    <!-- CHARACTER IMAGE -->
-    <div class="sidebar-section">
-      <div class="section-label">Character to Clone</div>
-      <div id="charPreviewWrap" style="display:none;margin-bottom:10px;position:relative;">
-        <img id="charPreview" style="width:100%;height:110px;object-fit:cover;border-radius:8px;border:1px solid var(--accent);">
-        <button onclick="clearCharacter()" style="position:absolute;top:5px;right:5px;background:rgba(8,10,15,0.8);border:1px solid var(--danger);color:var(--danger);border-radius:4px;cursor:pointer;font-size:0.7rem;padding:2px 7px;">✕</button>
-      </div>
-      <label style="display:block;cursor:pointer;">
-        <input type="file" id="charImageInput" accept="image/*" style="display:none" onchange="loadCharacterImage(this)">
-        <div id="charUploadBtn" class="btn btn-ghost btn-full" style="text-align:center;">📸 Upload Character Image</div>
-      </label>
-      <p style="font-size:0.65rem;color:var(--muted);margin-top:7px;line-height:1.5;">Upload a clear photo of the face you want to clone onto your webcam feed.</p>
-    </div>
-
-    <!-- SESSION -->
-    <div class="sidebar-section">
-      <div class="section-label">Session</div>
-      <div class="control-row">
-        <button class="btn btn-primary" id="startBtn" onclick="startSession()" style="flex:1">▶ Start</button>
-        <button class="btn btn-danger" id="stopBtn" onclick="stopSession()" disabled>■ Stop</button>
-      </div>
-    </div>
-
-    <!-- INFO -->
-    <div class="sidebar-section">
-      <div class="section-label">How It Works</div>
-      <p style="font-size:0.72rem;color:var(--muted);line-height:1.7;">
-        1. Paste your <strong style="color:var(--accent)">Fal.ai API key</strong><br>
-        2. Upload a <strong style="color:var(--accent)">character face photo</strong><br>
-        3. Hit <strong style="color:var(--accent)">▶ Start</strong> — your face drives the character in real time
-      </p>
-    </div>
-
-    <!-- QUICK EDITS -->
-    <div class="sidebar-section">
-      <div class="section-label">Quick Edits</div>
-      <div class="quick-grid" id="quickGrid">
-        <button class="quick-btn" onclick="quickEdit(this,'Change the shirt to red')"><span>👕</span>Red Shirt</button>
-        <button class="quick-btn" onclick="quickEdit(this,'Add sunglasses to the person')"><span>🕶️</span>Sunglasses</button>
-        <button class="quick-btn" onclick="quickEdit(this,'Replace background with tropical beach')"><span>🏖️</span>Beach BG</button>
-        <button class="quick-btn" onclick="quickEdit(this,'Neon cyberpunk city background')"><span>🌆</span>Neon City</button>
-        <button class="quick-btn" onclick="quickEdit(this,'Make the person look like an anime character')"><span>✨</span>Anime</button>
-        <button class="quick-btn" onclick="quickEdit(this,'Add a hat to the person')"><span>🎩</span>Add Hat</button>
-        <button class="quick-btn" onclick="quickEdit(this,'Professional studio background with soft lighting')"><span>💡</span>Studio BG</button>
-        <button class="quick-btn" onclick="quickEdit(this,'Add a beard to the person')"><span>🧔</span>Beard</button>
-      </div>
-      <div class="add-quick">
-        <input type="text" id="customLabel" placeholder="Label" style="max-width:90px">
-        <input type="text" id="customPrompt" placeholder="Prompt">
-        <button class="btn btn-ghost" onclick="addQuick()">+</button>
-      </div>
-    </div>
-
-    <!-- LOG -->
-    <div class="sidebar-section grow">
-      <div class="section-label">Log</div>
-      <div class="log-area" id="logArea"></div>
-    </div>
-
   </div>
-</main>
 
-<div class="toast" id="toast"></div>
+  <div class="faq-section">
+    <div class="section-label" style="text-align:center">FAQ</div>
+    <h2 class="section-title" style="text-align:center;letter-spacing:-1.5px;font-size:clamp(28px,4vw,44px);margin-bottom:14px">Common questions.</h2>
+    <p style="text-align:center;color:var(--muted);font-size:15px;margin-bottom:40px">Anything else? <a href="mailto:hello@homebank.app" style="color:var(--accent);text-decoration:none">Drop us a message.</a></p>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">Is my financial data safe?<i class="ti ti-chevron-down"></i></button>
+        <div class="faq-a"><p>Your data is stored locally on your device by default. Cloud sync is optional and end-to-end encrypted &mdash; we never have access to your financial information. No ads, no data selling.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">Which banks and formats are supported?<i class="ti ti-chevron-down"></i></button>
+        <div class="faq-a"><p>We support QIF, OFX/QFX, CSV, MT940, CAMT.053, HBK and XHB formats. Auto-detection works for Revolut, N26, Wise, Boursorama, ING, BBVA, Sparkasse and 15+ more banks.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">Can I cancel my Premium subscription anytime?<i class="ti ti-chevron-down"></i></button>
+        <div class="faq-a"><p>Yes, cancel anytime. Your account reverts to the free tier at the end of the billing period. Your data is never deleted and you keep all your history.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">Does HomeBank connect directly to my bank?<i class="ti ti-chevron-down"></i></button>
+        <div class="faq-a"><p>Direct bank connection via open banking is on the roadmap. For now, import your bank statement exports &mdash; most banks offer CSV or OFX downloads, and we auto-detect the format.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">Which devices are supported?<i class="ti ti-chevron-down"></i></button>
+        <div class="faq-a"><p>HomeBank works in any modern browser on desktop, tablet, and mobile. Native iOS and macOS apps are available with iCloud sync. Android is coming soon.</p></div>
+      </div>
+    </div>
+  </div>
 
-<!-- Hidden canvas for capturing webcam frames -->
-<canvas id="captureCanvas" style="display:none"></canvas>
+  <footer>
+    <div class="footer-logo">home<span>bank</span></div>
+    <div class="footer-links">
+      <a href="#">Features</a>
+      <a href="#">Pricing</a>
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="mailto:hello@homebank.app">Contact</a>
+    </div>
+    <p>&copy; 2026 HomeBank &middot; No VC funding. No data harvesting. Just a great finance app.</p>
+  </footer>
+</div>
 
+<div class="view" id="view-auth">
+  <div class="auth-wrap">
+    <div class="auth-bg"></div>
+    <div class="auth-card">
+      <div id="auth-signin">
+        <div class="auth-title">Welcome back</div>
+        <div class="auth-sub">Sign in to your HomeBank account</div>
+        <div class="form-group">
+          <label class="form-label">Email address</label>
+          <input class="form-input" type="email" placeholder="you@example.com" id="signinEmail">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input class="form-input" type="password" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" id="signinPassword">
+        </div>
+        <div style="text-align:right;margin-bottom:20px">
+          <a href="#" style="font-size:12px;color:var(--accent);text-decoration:none" onclick="showToast('info','Coming soon','Password reset will be available in the next update.');return false">Forgot password?</a>
+        </div>
+        <button class="btn-primary btn-full" onclick="handleSignIn()">Sign in</button>
+        <div class="auth-divider"><hr><span>or continue with</span><hr></div>
+        <button class="btn-ghost btn-full" style="margin-bottom:10px;gap:8px" onclick="handleOAuth('apple')"><i class="ti ti-brand-apple" style="font-size:16px"></i>Apple</button>
+        <button class="btn-ghost btn-full" style="gap:8px" onclick="handleOAuth('google')"><i class="ti ti-brand-google" style="font-size:16px"></i>Google</button>
+        <div class="auth-toggle">Do not have an account? <button onclick="switchAuth('signup')">Create one free</button></div>
+      </div>
+
+      <div id="auth-signup" style="display:none">
+        <div class="auth-title">Create your account</div>
+        <div class="auth-sub">Free forever &middot; No credit card needed</div>
+        <div class="form-group">
+          <label class="form-label">Full name</label>
+          <input class="form-input" type="text" placeholder="Alex Muller" id="signupName">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email address</label>
+          <input class="form-input" type="email" placeholder="you@example.com" id="signupEmail">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input class="form-input" type="password" placeholder="At least 8 characters" id="signupPassword">
+        </div>
+        <button class="btn-primary btn-full" style="margin-top:4px" onclick="handleSignUp()">Create free account</button>
+        <div class="auth-divider"><hr><span>or continue with</span><hr></div>
+        <button class="btn-ghost btn-full" style="margin-bottom:10px;gap:8px" onclick="handleOAuth('apple')"><i class="ti ti-brand-apple" style="font-size:16px"></i>Apple</button>
+        <button class="btn-ghost btn-full" style="gap:8px" onclick="handleOAuth('google')"><i class="ti ti-brand-google" style="font-size:16px"></i>Google</button>
+        <div class="auth-toggle">Already have an account? <button onclick="switchAuth('signin')">Sign in</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="view" id="view-dashboard">
+  <div class="dash-wrap">
+    <div class="dash-header">
+      <div>
+        <div class="dash-greeting" id="dashGreeting">Good morning, Alex</div>
+        <div class="dash-date" id="dashDate"></div>
+      </div>
+      <div class="dash-tabs">
+        <button class="dash-tab active" onclick="setDashTab(this,'overview')">Overview</button>
+        <button class="dash-tab" onclick="setDashTab(this,'budgets')">Budgets</button>
+        <button class="dash-tab" onclick="setDashTab(this,'accounts')">Accounts</button>
+      </div>
+    </div>
+
+    <div id="tab-overview">
+      <div class="kpi-row">
+        <div class="kpi">
+          <div class="kpi-label">Net worth</div>
+          <div class="kpi-val" id="kpiNetWorth">&euro;28,450</div>
+          <div class="kpi-delta up" id="kpiNetDelta"><i class="ti ti-trending-up" style="font-size:11px"></i> +&euro;1,240 this month</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Spent this month</div>
+          <div class="kpi-val" id="kpiSpent">&euro;1,832</div>
+          <div class="kpi-delta down" id="kpiSpentDelta"><i class="ti ti-arrow-up-right" style="font-size:11px"></i> +8% vs last month</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Saved this month</div>
+          <div class="kpi-val" id="kpiSaved">&euro;620</div>
+          <div class="kpi-delta up" id="kpiSavedDelta"><i class="ti ti-arrow-up-right" style="font-size:11px"></i> +&euro;120 vs May</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Subscriptions</div>
+          <div class="kpi-val" id="kpiSubs">&euro;84</div>
+          <div class="kpi-delta" style="color:var(--muted)" id="kpiSubsLabel">8 active services</div>
+        </div>
+      </div>
+
+      <div class="dash-grid">
+        <div class="dash-panel">
+          <div class="panel-title">Cash flow <span class="panel-sub">Last 6 months</span></div>
+          <div class="chart-area">
+            <canvas id="cashflowChart" role="img" aria-label="Monthly income vs spending bar chart, January to June 2026"></canvas>
+          </div>
+        </div>
+        <div class="dash-panel">
+          <div class="panel-title">Spending by category <span class="panel-sub">June 2026</span></div>
+          <div class="pie-wrap">
+            <canvas id="pieChart" width="160" height="160" role="img" aria-label="Donut chart of spending categories"></canvas>
+          </div>
+          <div class="pie-legend" id="pieLegend"></div>
+        </div>
+      </div>
+
+      <div class="dash-panel">
+        <div class="panel-title">Recent transactions <span class="panel-sub"><a href="#" style="color:var(--accent);text-decoration:none" onclick="showToast('info','Coming soon','Full transaction history will be available soon.');return false">View all</a></span></div>
+        <div class="txn-list" id="txnList"></div>
+      </div>
+    </div>
+
+    <div id="tab-budgets" style="display:none">
+      <div class="dash-panel">
+        <div class="panel-title">June 2026 budgets <span class="panel-sub" id="budgetHeaderSub">&euro;1,832 of &euro;2,400 spent</span></div>
+        <div class="budget-list" id="budgetList"></div>
+      </div>
+    </div>
+
+    <div id="tab-accounts" style="display:none">
+      <div class="dash-panel">
+        <div class="panel-title">Your accounts <span class="panel-sub" id="accountsHeaderSub">6 accounts &middot; &euro;28,450 net</span></div>
+        <div class="accounts-list" id="accountsList"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="view" id="view-admin">
+  <div class="admin-wrap">
+    <div class="admin-header">
+      <div class="admin-title">
+        <i class="ti ti-shield-lock" style="color:var(--accent)"></i>
+        Admin Panel
+        <span class="admin-badge">Admin</span>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <span style="font-size:12px;color:var(--muted)">Logged in as <strong style="color:var(--text)">Admin</strong></span>
+        <button class="btn-ghost btn-small" onclick="logoutAdmin()">Logout</button>
+      </div>
+    </div>
+
+    <div class="admin-grid">
+      <div class="admin-sidebar">
+        <div class="admin-sidebar-title">Users</div>
+        <div class="admin-user-list" id="adminUserList"></div>
+        <div style="margin-top:14px;padding-top:14px;border-top:0.5px solid var(--border)">
+          <button class="btn-primary btn-full" onclick="showAddUserModal()" style="font-size:12px;padding:10px">
+            <i class="ti ti-plus" style="margin-right:4px"></i>Add User
+          </button>
+        </div>
+      </div>
+
+      <div class="admin-main" id="adminMainPanel">
+        <div class="admin-empty">
+          <i class="ti ti-users"></i>
+          <div style="font-size:15px;font-weight:500;margin-bottom:4px">Select a user</div>
+          <div>Choose a user from the sidebar to manage their data</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>
-  // ── State ──────────────────────────────────────────────────────────────────
-  let localStream = null;
-  let isRunning = false;
-  let currentPrompt = '';
-  let strength = 0.6;
-  let loopId = null;
-  let ws = null;
-  let currentApiKey = '';
-  let fpsCounter = 0;
-  let lastFpsTime = performance.now();
-  const MODEL = 'fal-ai/lcm-sd15-i2i';
-  let characterImageB64 = null; // base64 of the reference character image
 
-  // ── Character Image ────────────────────────────────────────────────────────
-  function loadCharacterImage(input) {
-    const file = input.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      characterImageB64 = e.target.result.split(',')[1];
-      document.getElementById('charPreview').src = e.target.result;
-      document.getElementById('charPreviewWrap').style.display = 'block';
-      document.getElementById('charUploadBtn').textContent = '✅ Character Loaded';
-      log(`Character image loaded: ${file.name}`, 'success');
-    };
-    reader.readAsDataURL(file);
+/* =========================================================
+   DATA STORE (In-Memory)
+========================================================= */
+
+const DEFAULT_USERS = [
+  {
+    id: 'user_1',
+    name: 'Alex Muller',
+    email: 'alex@example.com',
+    avatar: 'AM',
+    role: 'user',
+    status: 'online',
+    plan: 'Premium',
+    joined: '2026-01-15',
+    greeting: 'Good morning, Alex',
+    kpi: {
+      netWorth: 28450,
+      netWorthDelta: '+EUR1,240 this month',
+      netWorthDeltaUp: true,
+      spent: 1832,
+      spentDelta: '+8% vs last month',
+      spentDeltaUp: false,
+      saved: 620,
+      savedDelta: '+EUR120 vs May',
+      savedDeltaUp: true,
+      subs: 84,
+      subsLabel: '8 active services'
+    },
+    accounts: [
+      {name:'DKB Checking',type:'Bank account',bal:4820,color:'#4f8ef7'},
+      {name:'N26 Savings',type:'Savings account',bal:18300,color:'#22c87a'},
+      {name:'Barclays Credit',type:'Credit card',bal:-670,color:'#f75f5f'},
+      {name:'PayPal',type:'Digital wallet',bal:234,color:'#a78bfa'},
+      {name:'Cash',type:'Cash',bal:95,color:'#f5a623'},
+      {name:'ETF Portfolio',type:'Investment',bal:5671,color:'#4f8ef7'},
+    ],
+    budgets: [
+      {name:'Housing',spent:780,total:800,color:'#4f8ef7'},
+      {name:'Food & Groceries',spent:320,total:400,color:'#22c87a'},
+      {name:'Transport',spent:186,total:200,color:'#a78bfa'},
+      {name:'Health',spent:95,total:150,color:'#f75f5f'},
+      {name:'Entertainment',spent:140,total:150,color:'#f5a623'},
+      {name:'Subscriptions',spent:84,total:100,color:'#22c87a'},
+      {name:'Clothing',spent:227,total:200,color:'#f75f5f'},
+    ],
+    transactions: [
+      {icon:'\u{1F6D2}',name:'Rewe',cat:'Groceries',date:'Today',amt:-54.20,bg:'rgba(79,142,247,.13)'},
+      {icon:'\u{2615}',name:'Coffee Collective',cat:'Dining out',date:'Today',amt:-4.80,bg:'rgba(245,166,35,.13)'},
+      {icon:'\u{1F4B0}',name:'Salary',cat:'Income',date:'27 Jun',amt:3200,bg:'rgba(34,200,122,.12)'},
+      {icon:'\u{1F3B5}',name:'Spotify',cat:'Subscriptions',date:'26 Jun',amt:-9.99,bg:'rgba(167,139,250,.12)'},
+      {icon:'\u{1F687}',name:'BVG Monthly Pass',cat:'Transport',date:'25 Jun',amt:-86,bg:'rgba(79,142,247,.13)'},
+      {icon:'\u{1F48A}',name:'Pharmacy',cat:'Health',date:'24 Jun',amt:-18.50,bg:'rgba(34,200,122,.12)'},
+      {icon:'\u{1F355}',name:"Domino's",cat:'Dining out',date:'23 Jun',amt:-22.40,bg:'rgba(245,166,35,.13)'},
+      {icon:'\u{1F4FA}',name:'Netflix',cat:'Subscriptions',date:'22 Jun',amt:-15.99,bg:'rgba(167,139,250,.12)'},
+    ]
+  },
+  {
+    id: 'user_2',
+    name: 'Sarah Chen',
+    email: 'sarah@example.com',
+    avatar: 'SC',
+    role: 'user',
+    status: 'offline',
+    plan: 'Free',
+    joined: '2026-03-10',
+    greeting: 'Hello, Sarah',
+    kpi: {
+      netWorth: 12400,
+      netWorthDelta: '+EUR340 this month',
+      netWorthDeltaUp: true,
+      spent: 2100,
+      spentDelta: '-2% vs last month',
+      spentDeltaUp: true,
+      saved: 400,
+      savedDelta: '+EUR50 vs May',
+      savedDeltaUp: true,
+      subs: 42,
+      subsLabel: '4 active services'
+    },
+    accounts: [
+      {name:'Chase Checking',type:'Bank account',bal:3200,color:'#4f8ef7'},
+      {name:'Marcus Savings',type:'Savings account',bal:8500,color:'#22c87a'},
+      {name:'Amex Gold',type:'Credit card',bal:-1200,color:'#f75f5f'},
+      {name:'Venmo',type:'Digital wallet',bal:150,color:'#a78bfa'},
+      {name:'Cash',type:'Cash',bal:80,color:'#f5a623'},
+      {name:'Robinhood',type:'Investment',bal:1670,color:'#4f8ef7'},
+    ],
+    budgets: [
+      {name:'Housing',spent:900,total:950,color:'#4f8ef7'},
+      {name:'Food & Groceries',spent:280,total:350,color:'#22c87a'},
+      {name:'Transport',spent:120,total:150,color:'#a78bfa'},
+      {name:'Health',spent:45,total:100,color:'#f75f5f'},
+      {name:'Entertainment',spent:200,total:200,color:'#f5a623'},
+      {name:'Subscriptions',spent:42,total:60,color:'#22c87a'},
+      {name:'Clothing',spent:180,total:150,color:'#f75f5f'},
+    ],
+    transactions: [
+      {icon:'\u{1F6D2}',name:'Whole Foods',cat:'Groceries',date:'Today',amt:-87.50,bg:'rgba(79,142,247,.13)'},
+      {icon:'\u{2615}',name:'Blue Bottle',cat:'Dining out',date:'Today',amt:-6.25,bg:'rgba(245,166,35,.13)'},
+      {icon:'\u{1F4B0}',name:'Freelance Pay',cat:'Income',date:'27 Jun',amt:1500,bg:'rgba(34,200,122,.12)'},
+      {icon:'\u{1F3B5}',name:'Apple Music',cat:'Subscriptions',date:'26 Jun',amt:-10.99,bg:'rgba(167,139,250,.12)'},
+      {icon:'\u{1F697}',name:'Uber',cat:'Transport',date:'25 Jun',amt:-24.50,bg:'rgba(79,142,247,.13)'},
+      {icon:'\u{1F3CB}',name:'Gym Membership',cat:'Health',date:'24 Jun',amt:-45,bg:'rgba(34,200,122,.12)'},
+      {icon:'\u{1F363}',name:'Nobu',cat:'Dining out',date:'23 Jun',amt:-120,bg:'rgba(245,166,35,.13)'},
+      {icon:'\u{1F4FA}',name:'HBO Max',cat:'Subscriptions',date:'22 Jun',amt:-15.99,bg:'rgba(167,139,250,.12)'},
+    ]
+  },
+  {
+    id: 'user_3',
+    name: 'James Wilson',
+    email: 'james@example.com',
+    avatar: 'JW',
+    role: 'user',
+    status: 'online',
+    plan: 'Premium',
+    joined: '2026-02-20',
+    greeting: 'Hey, James',
+    kpi: {
+      netWorth: 56700,
+      netWorthDelta: '+EUR2,100 this month',
+      netWorthDeltaUp: true,
+      spent: 3200,
+      spentDelta: '+12% vs last month',
+      spentDeltaUp: false,
+      saved: 1200,
+      savedDelta: '+EUR300 vs May',
+      savedDeltaUp: true,
+      subs: 156,
+      subsLabel: '12 active services'
+    },
+    accounts: [
+      {name:'Barclays Checking',type:'Bank account',bal:8200,color:'#4f8ef7'},
+      {name:'Vanguard IRA',type:'Savings account',bal:35000,color:'#22c87a'},
+      {name:'Chase Sapphire',type:'Credit card',bal:-2100,color:'#f75f5f'},
+      {name:'PayPal',type:'Digital wallet',bal:450,color:'#a78bfa'},
+      {name:'Cash',type:'Cash',bal:200,color:'#f5a623'},
+      {name:'Fidelity 401k',type:'Investment',bal:14950,color:'#4f8ef7'},
+    ],
+    budgets: [
+      {name:'Housing',spent:1200,total:1200,color:'#4f8ef7'},
+      {name:'Food & Groceries',spent:450,total:500,color:'#22c87a'},
+      {name:'Transport',spent:300,total:250,color:'#a78bfa'},
+      {name:'Health',spent:200,total:200,color:'#f75f5f'},
+      {name:'Entertainment',spent:350,total:300,color:'#f5a623'},
+      {name:'Subscriptions',spent:156,total:150,color:'#22c87a'},
+      {name:'Clothing',spent:300,total:250,color:'#f75f5f'},
+    ],
+    transactions: [
+      {icon:'\u{1F6D2}',name:'Trader Joes',cat:'Groceries',date:'Today',amt:-112.30,bg:'rgba(79,142,247,.13)'},
+      {icon:'\u{2615}',name:'Starbucks',cat:'Dining out',date:'Today',amt:-8.45,bg:'rgba(245,166,35,.13)'},
+      {icon:'\u{1F4B0}',name:'Consulting Fee',cat:'Income',date:'27 Jun',amt:5000,bg:'rgba(34,200,122,.12)'},
+      {icon:'\u{1F3B5}',name:'YouTube Premium',cat:'Subscriptions',date:'26 Jun',amt:-11.99,bg:'rgba(167,139,250,.12)'},
+      {icon:'\u{1F697}',name:'Lyft',cat:'Transport',date:'25 Jun',amt:-35.20,bg:'rgba(79,142,247,.13)'},
+      {icon:'\u{1F48A}',name:'CVS Pharmacy',cat:'Health',date:'24 Jun',amt:-67.80,bg:'rgba(34,200,122,.12)'},
+      {icon:'\u{1F354}',name:'Shake Shack',cat:'Dining out',date:'23 Jun',amt:-28.50,bg:'rgba(245,166,35,.13)'},
+      {icon:'\u{1F4FA}',name:'Disney+',cat:'Subscriptions',date:'22 Jun',amt:-7.99,bg:'rgba(167,139,250,.12)'},
+    ]
+  }
+];
+
+let usersData = JSON.parse(JSON.stringify(DEFAULT_USERS));
+let currentUser = null;
+let isAdmin = false;
+let selectedAdminUserId = null;
+let chartsReady = false;
+
+function fmt(n){
+  const abs = Math.abs(n).toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2});
+  return (n < 0 ? '-EUR' : 'EUR') + abs;
+}
+
+function showToast(type, title, message) {
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  toast.className = 'toast ' + type;
+  let icon = '';
+  if (type === 'success') icon = '<i class="ti ti-check toast-icon" style="color:var(--green)"></i>';
+  else if (type === 'error') icon = '<i class="ti ti-alert-circle toast-icon" style="color:var(--red)"></i>';
+  else icon = '<i class="ti ti-info-circle toast-icon" style="color:var(--accent)"></i>';
+  toast.innerHTML = icon + '<div class="toast-content"><div class="toast-title">' + title + '</div><div class="toast-msg">' + message + '</div></div>';
+  container.appendChild(toast);
+  setTimeout(() => { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 4000);
+}
+
+function handleSignIn() {
+  const email = document.getElementById('signinEmail').value.trim();
+  const password = document.getElementById('signinPassword').value.trim();
+
+  if (email === 'admin@homebank.app' && password === 'admin123') {
+    isAdmin = true;
+    currentUser = { name: 'Admin', email: 'admin@homebank.app', role: 'admin' };
+    document.getElementById('adminNavBtn').style.display = 'inline-block';
+    showToast('success', 'Welcome Admin', 'Signed in as administrator.');
+    setTimeout(() => showView('admin'), 600);
+    return;
   }
 
-  function clearCharacter() {
-    characterImageB64 = null;
-    document.getElementById('charPreviewWrap').style.display = 'none';
-    document.getElementById('charUploadBtn').textContent = '📸 Upload Character Image';
-    document.getElementById('charImageInput').value = '';
-    log('Character image cleared');
+  if (!email || !password) {
+    showToast('error', 'Missing fields', 'Please enter both email and password.');
+    return;
   }
 
-  // ── Logging ────────────────────────────────────────────────────────────────
-  function log(msg, type = 'default') {
-    // Show errors visibly on screen
-    if (type === 'error') {
-      const ov = document.getElementById('errorOverlay');
-      if (ov) { ov.style.display = 'block'; ov.textContent = '⚠ ' + msg; }
-    }
-    const area = document.getElementById('logArea');
-    const el = document.createElement('div');
-    el.className = `log-entry ${type}`;
-    const t = new Date();
-    const ts = `${String(t.getHours()).padStart(2,'0')}:${String(t.getMinutes()).padStart(2,'0')}:${String(t.getSeconds()).padStart(2,'0')}`;
-    el.innerHTML = `<span class="time">${ts}</span><span class="msg">${msg}</span>`;
-    area.appendChild(el);
-    area.scrollTop = area.scrollHeight;
+  const user = usersData.find(u => u.email.toLowerCase() === email.toLowerCase());
+  if (user) {
+    currentUser = user;
+    isAdmin = false;
+    showToast('success', 'Welcome back!', 'Signed in as ' + user.name + '.');
+    setTimeout(() => showView('dashboard'), 600);
+  } else {
+    showToast('error', 'Account not found', 'No account found with that email. Try signing up.');
+  }
+}
+
+function handleSignUp() {
+  const name = document.getElementById('signupName').value.trim();
+  const email = document.getElementById('signupEmail').value.trim();
+  const password = document.getElementById('signupPassword').value.trim();
+
+  if (!name || !email || !password) {
+    showToast('error', 'Missing fields', 'Please fill in all fields.');
+    return;
+  }
+  if (password.length < 8) {
+    showToast('error', 'Password too short', 'Password must be at least 8 characters.');
+    return;
   }
 
-  function toast(msg) {
-    const el = document.getElementById('toast');
-    el.textContent = msg;
-    el.classList.add('show');
-    setTimeout(() => el.classList.remove('show'), 4500);
+  const newUser = {
+    id: 'user_' + Date.now(),
+    name: name,
+    email: email,
+    avatar: name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0,2),
+    role: 'user',
+    status: 'online',
+    plan: 'Free',
+    joined: new Date().toISOString().split('T')[0],
+    greeting: 'Hello, ' + name.split(' ')[0],
+    kpi: {
+      netWorth: 0, netWorthDelta: '+EUR0 this month', netWorthDeltaUp: true,
+      spent: 0, spentDelta: '0% vs last month', spentDeltaUp: true,
+      saved: 0, savedDelta: '+EUR0 vs May', savedDeltaUp: true,
+      subs: 0, subsLabel: '0 active services'
+    },
+    accounts: [], budgets: [], transactions: []
+  };
+
+  usersData.push(newUser);
+  currentUser = newUser;
+  isAdmin = false;
+  showToast('success', 'Account created!', 'Welcome to HomeBank, ' + name.split(' ')[0] + '!');
+  setTimeout(() => showView('dashboard'), 800);
+}
+
+function handleOAuth(provider) {
+  const providerName = provider === 'apple' ? 'Apple' : 'Google';
+  showToast('info', providerName + ' Sign-In',
+    providerName + ' authentication requires a backend OAuth integration. For demo, use email/password or try admin@homebank.app / admin123');
+}
+
+function logoutAdmin() {
+  isAdmin = false;
+  currentUser = null;
+  selectedAdminUserId = null;
+  document.getElementById('adminNavBtn').style.display = 'none';
+  showToast('info', 'Logged out', 'You have been signed out.');
+  showView('landing');
+}
+
+function showView(name, sub) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  const target = document.getElementById('view-' + name);
+  if (target) target.classList.add('active');
+  if (name === 'auth' && sub) switchAuth(sub);
+  if (name === 'dashboard') {
+    renderDash();
+    const dateEl = document.getElementById('dashDate');
+    if (dateEl) dateEl.textContent = new Date().toLocaleDateString('en-GB', {weekday:'long',year:'numeric',month:'long',day:'numeric'});
   }
-
-  function setStatus(state) {
-    const dot = document.getElementById('statusDot');
-    const txt = document.getElementById('statusText');
-    dot.className = 'status-dot';
-    if (state === 'live') { dot.classList.add('live'); txt.textContent = 'LIVE'; }
-    else if (state === 'connecting') { dot.classList.add('connecting'); txt.textContent = 'CONNECTING'; }
-    else { txt.textContent = 'OFFLINE'; }
+  if (name === 'admin') {
+    renderAdminPanel();
   }
+  window.scrollTo(0, 0);
+}
 
-  function toggleKey() {
-    const i = document.getElementById('apiKeyInput');
-    i.type = i.type === 'password' ? 'text' : 'password';
-  }
+function switchAuth(mode) {
+  const signinEl = document.getElementById('auth-signin');
+  const signupEl = document.getElementById('auth-signup');
+  if (signinEl) signinEl.style.display = mode === 'signin' ? 'block' : 'none';
+  if (signupEl) signupEl.style.display = mode === 'signup' ? 'block' : 'none';
+}
 
-  function updateStrength(v) {
-    strength = parseFloat(v);
-    document.getElementById('strengthVal').textContent = strength.toFixed(2);
-  }
-
-  // ── Start ──────────────────────────────────────────────────────────────────
-  async function startSession() {
-    const apiKey = document.getElementById('apiKeyInput').value.trim();
-    if (!apiKey) { toast('Enter your Fal.ai API key first.'); return; }
-    if (!characterImageB64) { toast('Upload a character image to clone first.'); return; }
-
-    document.getElementById('startBtn').disabled = true;
-    document.getElementById('connectingOverlay').classList.add('visible');
-    document.getElementById('connectingMsg').textContent = 'REQUESTING CAMERA...';
-    setStatus('connecting');
-
-    try {
-      localStream = await navigator.mediaDevices.getUserMedia({
-        video: { width: 512, height: 512, frameRate: 30 },
-        audio: false
-      });
-
-      const video = document.getElementById('localVideo');
-      video.srcObject = localStream;
-      video.style.display = 'block';
-      document.getElementById('localPlaceholder').style.display = 'none';
-      log('Camera ready', 'success');
-
-      document.getElementById('connectingMsg').textContent = 'CONNECTING TO FAL...';
-      await startHTTPSession(apiKey);
-
-    } catch (err) {
-      log(`Error: ${err.message}`, 'error');
-      toast(`Failed to start: ${err.message}`);
-      reset();
-    }
-  }
-
-  // ── WebSocket session (lcm-sd15-i2i supports realtime WS) ──────────────────
-  async function startHTTPSession(apiKey) {
-    currentApiKey = apiKey;
-    const wsUrl = `wss://fal.run/${MODEL}/realtime?fal_key=${encodeURIComponent(apiKey)}`;
-    ws = new WebSocket(wsUrl);
-
-    ws.onopen = () => {
-      log('Connected to Fal.ai ✓', 'success');
-      document.getElementById('connectingOverlay').classList.remove('visible');
-      document.getElementById('outputCanvas').style.display = 'block';
-      document.getElementById('remotePlaceholder').style.display = 'none';
-      document.getElementById('fpsBadge').style.display = 'block';
-      document.getElementById('stopBtn').disabled = false;
-      isRunning = true;
-      setStatus('live');
-      startFrameLoop();
-    };
-
-    ws.onmessage = async (event) => {
-      try {
-        const data = JSON.parse(event.data);
-        if (data.images && data.images[0]) {
-          const imgSrc = data.images[0].url || `data:image/jpeg;base64,${data.images[0]}`;
-          await drawOutputImage(imgSrc);
-          updateFps();
-        } else if (data.error) {
-          log(`Fal: ${JSON.stringify(data.error).slice(0,150)}`, 'error');
-        }
-      } catch(e) {
-        if (event.data instanceof ArrayBuffer) {
-          const blob = new Blob([event.data], { type: 'image/jpeg' });
-          const url = URL.createObjectURL(blob);
-          await drawOutputImage(url);
-          URL.revokeObjectURL(url);
-          updateFps();
-        }
-      }
-    };
-
-    ws.onerror = () => {
-      log('WebSocket error — check API key & credits', 'error');
-      toast('Connection error. Check your Fal.ai API key.');
-      reset();
-    };
-
-    ws.onclose = (e) => {
-      if (isRunning) { log(`Disconnected (${e.code})`, 'error'); reset(); }
-    };
-  }
-
-  // ── Build face prompt from character image ─────────────────────────────────
-  function buildFacePrompt() {
-    return `photorealistic portrait, transform face to match reference character, same facial features as reference image, high quality, sharp`;
-  }
-
-  // ── Frame loop: capture webcam → send via WebSocket ───────────────────────
-  function startFrameLoop() {
-    const video = document.getElementById('localVideo');
-    const cap = document.getElementById('captureCanvas');
-    cap.width = 512; cap.height = 512;
-    const ctx = cap.getContext('2d');
-
-    let sending = false;
-
-    async function loop() {
-      if (!isRunning) return;
-      loopId = requestAnimationFrame(loop);
-
-      if (sending || !ws || ws.readyState !== WebSocket.OPEN) return;
-      if (video.readyState < 2) return;
-
-      sending = true;
-      ctx.drawImage(video, 0, 0, 512, 512);
-      const b64 = cap.toDataURL('image/jpeg', 0.8).split(',')[1];
-
-      try {
-        ws.send(JSON.stringify({
-          prompt: buildFacePrompt(),
-          image_url: `data:image/jpeg;base64,${b64}`,
-          strength: 0.75,
-          num_inference_steps: 4,
-          guidance_scale: 1,
-          seed: 42
-        }));
-      } catch(e) {}
-
-      sending = false;
-    }
-
-    loopId = requestAnimationFrame(loop);
-    log('Streaming frames to Fal.ai...', 'info');
-  }
-
-  // ── Draw output frame ──────────────────────────────────────────────────────
-  function drawOutputImage(src) {
-    return new Promise((resolve) => {
-      const canvas = document.getElementById('outputCanvas');
-      const ctx = canvas.getContext('2d');
-      const img = new Image();
-      img.onload = () => {
-        canvas.width = img.width || 512;
-        canvas.height = img.height || 512;
-        ctx.drawImage(img, 0, 0);
-        resolve();
-      };
-      img.onerror = resolve;
-      img.src = src;
-    });
-  }
-
-  // ── FPS counter ────────────────────────────────────────────────────────────
-  function updateFps() {
-    fpsCounter++;
-    const now = performance.now();
-    if (now - lastFpsTime >= 1000) {
-      document.getElementById('fpsBadge').textContent = `${fpsCounter} FPS`;
-      fpsCounter = 0;
-      lastFpsTime = now;
-    }
-  }
-
-  // ── Stop ──────────────────────────────────────────────────────────────────
-  function stopSession() {
-    log('Session stopped');
-    reset();
-  }
-
-  function reset() {
-    isRunning = false;
-    const ov = document.getElementById('errorOverlay');
-    if (ov) ov.style.display = 'none';
-    if (loopId) { cancelAnimationFrame(loopId); loopId = null; }
-    if (ws) { try { ws.close(); } catch(e){} ws = null; }
-    if (localStream) { localStream.getTracks().forEach(t => t.stop()); localStream = null; }
-
-    setStatus('offline');
-    document.getElementById('startBtn').disabled = false;
-    document.getElementById('stopBtn').disabled = true;
-    
-    document.getElementById('localVideo').style.display = 'none';
-    document.getElementById('outputCanvas').style.display = 'none';
-    document.getElementById('localPlaceholder').style.display = 'flex';
-    document.getElementById('remotePlaceholder').style.display = 'flex';
-    document.getElementById('connectingOverlay').classList.remove('visible');
-    document.getElementById('fpsBadge').style.display = 'none';
-  }
-
-  // ── Prompt controls ───────────────────────────────────────────────────────
-  function applyPrompt() {
-    const txt = document.getElementById('promptInput').value.trim();
-    if (!txt) { toast('Type an edit prompt first.'); return; }
-    currentPrompt = txt;
-    document.getElementById('activePromptText').textContent = txt;
-    document.getElementById('activePromptDisplay').classList.add('visible');
-    document.getElementById('promptInput').value = '';
-    document.querySelectorAll('.quick-btn').forEach(b => b.classList.remove('active'));
-    log(`Prompt set: "${txt}"`, 'info');
-  }
-
-  function quickEdit(btn, prompt) {
-    currentPrompt = prompt;
-    document.getElementById('activePromptText').textContent = prompt;
-    document.getElementById('activePromptDisplay').classList.add('visible');
-    document.querySelectorAll('.quick-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    log(`Quick edit: "${prompt}"`, 'info');
-  }
-
-  function clearPrompt() {
-    currentPrompt = '';
-    document.getElementById('activePromptDisplay').classList.remove('visible');
-    document.querySelectorAll('.quick-btn').forEach(b => b.classList.remove('active'));
-    log('Prompt cleared');
-  }
-
-  function addQuick() {
-    const label = document.getElementById('customLabel').value.trim();
-    const prompt = document.getElementById('customPrompt').value.trim();
-    if (!label || !prompt) { toast('Enter both label and prompt.'); return; }
-    const grid = document.getElementById('quickGrid');
-    const btn = document.createElement('button');
-    btn.className = 'quick-btn';
-    btn.innerHTML = `<span>✏️</span>${label}`;
-    btn.onclick = function() { quickEdit(this, prompt); };
-    grid.appendChild(btn);
-    document.getElementById('customLabel').value = '';
-    document.getElementById('customPrompt').value = '';
-    log(`Quick edit added: "${label}"`, 'success');
-  }
-
-  // Enter key on textarea
-  document.getElementById('promptInput').addEventListener('keydown', e => {
-    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); applyPrompt(); }
+function setDashTab(btn, tab) {
+  document.querySelectorAll('.dash-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  ['overview', 'budgets', 'accounts'].forEach(t => {
+    const el = document.getElementById('tab-' + t);
+    if (el) el.style.display = t === tab ? 'block' : 'none';
   });
+}
 
-  log('BYBTRANS ready — enter API key, set a prompt, then Start.');
+function toggleFaq(btn) {
+  const ans = btn.nextElementSibling;
+  if (!ans) return;
+  const open = ans.classList.toggle('open');
+  btn.classList.toggle('open', open);
+}
+
+function renderDash() {
+  if (!currentUser) return;
+
+  const greetEl = document.getElementById('dashGreeting');
+  if (greetEl) greetEl.textContent = currentUser.greeting;
+
+  const kpi = currentUser.kpi;
+  const netEl = document.getElementById('kpiNetWorth');
+  if (netEl) netEl.textContent = fmt(kpi.netWorth);
+  const netDeltaEl = document.getElementById('kpiNetDelta');
+  if (netDeltaEl) {
+    netDeltaEl.innerHTML = '<i class="ti ti-trending-' + (kpi.netWorthDeltaUp ? 'up' : 'down') + '" style="font-size:11px"></i> ' + kpi.netWorthDelta;
+    netDeltaEl.className = 'kpi-delta ' + (kpi.netWorthDeltaUp ? 'up' : 'down');
+  }
+
+  const spentEl = document.getElementById('kpiSpent');
+  if (spentEl) spentEl.textContent = fmt(kpi.spent);
+  const spentDeltaEl = document.getElementById('kpiSpentDelta');
+  if (spentDeltaEl) {
+    spentDeltaEl.innerHTML = '<i class="ti ti-arrow-up-right" style="font-size:11px"></i> ' + kpi.spentDelta;
+    spentDeltaEl.className = 'kpi-delta ' + (kpi.spentDeltaUp ? 'up' : 'down');
+  }
+
+  const savedEl = document.getElementById('kpiSaved');
+  if (savedEl) savedEl.textContent = fmt(kpi.saved);
+  const savedDeltaEl = document.getElementById('kpiSavedDelta');
+  if (savedDeltaEl) {
+    savedDeltaEl.innerHTML = '<i class="ti ti-arrow-up-right" style="font-size:11px"></i> ' + kpi.savedDelta;
+    savedDeltaEl.className = 'kpi-delta ' + (kpi.savedDeltaUp ? 'up' : 'down');
+  }
+
+  const subsEl = document.getElementById('kpiSubs');
+  if (subsEl) subsEl.textContent = fmt(kpi.subs);
+  const subsLabelEl = document.getElementById('kpiSubsLabel');
+  if (subsLabelEl) subsLabelEl.textContent = kpi.subsLabel;
+
+  const txnList = document.getElementById('txnList');
+  if (txnList) {
+    const txns = currentUser.transactions;
+    if (txns.length === 0) {
+      txnList.innerHTML = '<div style="text-align:center;padding:30px;color:var(--muted)">No transactions yet</div>';
+    } else {
+      txnList.innerHTML = txns.map(t => `
+        <div class="txn-row">
+          <div class="txn-left">
+            <div class="txn-icon2" style="background:${t.bg}">${t.icon}</div>
+            <div><div class="txn-name">${t.name}</div><div class="txn-meta">${t.cat}</div></div>
+          </div>
+          <div class="txn-right">
+            <div class="txn-amt${t.amt > 0 ? ' pos' : ' neg'}">${t.amt > 0 ? '+' + fmt(t.amt) : fmt(t.amt)}</div>
+            <div class="txn-date">${t.date}</div>
+          </div>
+        </div>`).join('');
+    }
+  }
+
+  const budgetList = document.getElementById('budgetList');
+  const budgetHeaderSub = document.getElementById('budgetHeaderSub');
+  if (budgetList) {
+    const budgets = currentUser.budgets;
+    if (budgets.length === 0) {
+      budgetList.innerHTML = '<div style="text-align:center;padding:30px;color:var(--muted)">No budgets set</div>';
+      if (budgetHeaderSub) budgetHeaderSub.textContent = 'No budgets';
+    } else {
+      const totalSpent = budgets.reduce((s, b) => s + b.spent, 0);
+      const totalBudget = budgets.reduce((s, b) => s + b.total, 0);
+      if (budgetHeaderSub) budgetHeaderSub.textContent = fmt(totalSpent) + ' of ' + fmt(totalBudget) + ' spent';
+
+      budgetList.innerHTML = budgets.map(b => {
+        const pct = Math.min(100, Math.round(b.spent / b.total * 100));
+        const over = b.spent > b.total;
+        return `<div class="budget-item-row">
+          <div class="budget-item-header">
+            <div class="budget-name">${b.name}</div>
+            <div class="budget-vals" style="color:${over ? 'var(--red)' : 'var(--muted)'}">${fmt(b.spent)} / ${fmt(b.total)}</div>
+          </div>
+          <div class="budget-track"><div class="budget-fill" style="width:${pct}%;background:${over ? 'var(--red)' : b.color}"></div></div>
+        </div>`;
+      }).join('');
+    }
+  }
+
+  const accountsList = document.getElementById('accountsList');
+  const accountsHeaderSub = document.getElementById('accountsHeaderSub');
+  if (accountsList) {
+    const accounts = currentUser.accounts;
+    if (accounts.length === 0) {
+      accountsList.innerHTML = '<div style="text-align:center;padding:30px;color:var(--muted)">No accounts linked</div>';
+      if (accountsHeaderSub) accountsHeaderSub.textContent = '0 accounts';
+    } else {
+      const net = accounts.reduce((s, a) => s + a.bal, 0);
+      if (accountsHeaderSub) accountsHeaderSub.innerHTML = accounts.length + ' accounts &middot; ' + fmt(net) + ' net';
+
+      accountsList.innerHTML = accounts.map(a => `
+        <div class="acc-row">
+          <div class="acc-left">
+            <div class="acc-dot" style="background:${a.color}"></div>
+            <div><div class="acc-name">${a.name}</div><div class="acc-type">${a.type}</div></div>
+          </div>
+          <div class="acc-bal${a.bal < 0 ? ' neg' : ''}">${fmt(a.bal)}</div>
+        </div>`).join('');
+    }
+  }
+
+  if (chartsReady) return;
+  chartsReady = true;
+
+  try {
+    const cashflowCanvas = document.getElementById('cashflowChart');
+    if (cashflowCanvas && typeof Chart !== 'undefined') {
+      new Chart(cashflowCanvas, {
+        type: 'bar',
+        data: {
+          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+          datasets: [
+            {label: 'Income', data: [3200, 3200, 3450, 3200, 3200, 3200], backgroundColor: 'rgba(34,200,122,.75)', borderRadius: 4, borderSkipped: false},
+            {label: 'Spending', data: [1960, 2100, 1780, 2340, 1690, 1832], backgroundColor: 'rgba(79,142,247,.75)', borderRadius: 4, borderSkipped: false}
+          ]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: {display: false}, tooltip: {callbacks: {label: ctx => ' EUR' + ctx.parsed.y.toLocaleString()}} },
+          scales: {
+            x: {grid: {color: 'rgba(255,255,255,.05)'}, ticks: {color: '#8a8f9a', font: {size: 11, family: 'Inter'}}},
+            y: {grid: {color: 'rgba(255,255,255,.05)'}, ticks: {color: '#8a8f9a', font: {size: 11, family: 'Inter'}, callback: v => 'EUR' + v.toLocaleString()}, border: {display: false}}
+          }
+        }
+      });
+    }
+  } catch(e) { console.warn('Cashflow chart failed:', e); }
+
+  try {
+    const pieCanvas = document.getElementById('pieChart');
+    if (pieCanvas && typeof Chart !== 'undefined') {
+      const cats = ['Housing', 'Food', 'Transport', 'Health', 'Entertainment', 'Other'];
+      const catVals = [35, 22, 15, 12, 9, 7];
+      const catColors = ['#4f8ef7', '#22c87a', '#a78bfa', '#f75f5f', '#f5a623', '#8a8f9a'];
+      new Chart(pieCanvas, {
+        type: 'doughnut',
+        data: {labels: cats, datasets: [{data: catVals, backgroundColor: catColors, borderWidth: 3, borderColor: '#111318', hoverBorderColor: '#111318'}]},
+        options: {responsive: false, cutout: '70%', plugins: {legend: {display: false}, tooltip: {callbacks: {label: ctx => ` ${ctx.label}: ${ctx.parsed}%`}}}}
+      });
+      const pieLegend = document.getElementById('pieLegend');
+      if (pieLegend) {
+        pieLegend.innerHTML = cats.map((c, i) => `
+          <div class="pie-leg-row">
+            <div class="pie-leg-left"><div class="pie-leg-dot" style="background:${catColors[i]}"></div><span style="color:var(--muted)">${c}</span></div>
+            <span style="font-weight:600">${catVals[i]}%</span>
+          </div>`).join('');
+      }
+    }
+  } catch(e) { console.warn('Pie chart failed:', e); }
+}
+
+/* ADMIN PANEL */
+function renderAdminPanel() {
+  if (!isAdmin) {
+    showToast('error', 'Access denied', 'You must be logged in as admin.');
+    showView('auth', 'signin');
+    return;
+  }
+
+  const userList = document.getElementById('adminUserList');
+  if (userList) {
+    userList.innerHTML = usersData.map(u => `
+      <div class="admin-user-item ${selectedAdminUserId === u.id ? 'active' : ''}" onclick="selectAdminUser('${u.id}')">
+        <div class="admin-user-avatar">${u.avatar}</div>
+        <div class="admin-user-info">
+          <div class="admin-user-name">${u.name}</div>
+          <div class="admin-user-email">${u.email}</div>
+        </div>
+        <div class="admin-user-status ${u.status}"></div>
+      </div>
+    `).join('');
+  }
+
+  const mainPanel = document.getElementById('adminMainPanel');
+  if (!selectedAdminUserId) {
+    if (mainPanel) {
+      mainPanel.innerHTML = `
+        <div class="admin-empty">
+          <i class="ti ti-users"></i>
+          <div style="font-size:15px;font-weight:500;margin-bottom:4px">Select a user</div>
+          <div>Choose a user from the sidebar to manage their data</div>
+        </div>`;
+    }
+    return;
+  }
+
+  const user = usersData.find(u => u.id === selectedAdminUserId);
+  if (!user) return;
+
+  const totalBal = user.accounts.reduce((s, a) => s + a.bal, 0);
+  const totalBudget = user.budgets.reduce((s, b) => s + b.total, 0);
+  const totalSpent = user.budgets.reduce((s, b) => s + b.spent, 0);
+
+  if (mainPanel) {
+    mainPanel.innerHTML = `
+      <div class="admin-section">
+        <div class="admin-section-title"><i class="ti ti-user"></i>User Profile</div>
+        <div class="admin-form-grid">
+          <div class="admin-form-group">
+            <label class="admin-form-label">Full Name</label>
+            <input class="admin-form-input" id="adminUserName" value="${user.name}" onchange="updateUserField('${user.id}','name',this.value)">
+          </div>
+          <div class="admin-form-group">
+            <label class="admin-form-label">Email</label>
+            <input class="admin-form-input" id="adminUserEmail" value="${user.email}" onchange="updateUserField('${user.id}','email',this.value)">
+          </div>
+          <div class="admin-form-group">
+            <label class="admin-form-label">Plan</label>
+            <select class="admin-form-select" id="adminUserPlan" onchange="updateUserField('${user.id}','plan',this.value)">
+              <option value="Free" ${user.plan === 'Free' ? 'selected' : ''}>Free</option>
+              <option value="Premium" ${user.plan === 'Premium' ? 'selected' : ''}>Premium</option>
+            </select>
+          </div>
+          <div class="admin-form-group">
+            <label class="admin-form-label">Status</label>
+            <select class="admin-form-select" id="adminUserStatus" onchange="updateUserField('${user.id}','status',this.value)">
+              <option value="online" ${user.status === 'online' ? 'selected' : ''}>Online</option>
+              <option value="offline" ${user.status === 'offline' ? 'selected' : ''}>Offline</option>
+            </select>
+          </div>
+        </div>
+        <div class="admin-actions">
+          <button class="btn-primary btn-small" onclick="saveUserProfile('${user.id}')"><i class="ti ti-check" style="margin-right:4px"></i>Save Profile</button>
+          <button class="btn-ghost btn-small" onclick="viewAsUser('${user.id}')"><i class="ti ti-eye" style="margin-right:4px"></i>View as User</button>
+          <button class="btn-danger btn-small" onclick="deleteUser('${user.id}')"><i class="ti ti-trash" style="margin-right:4px"></i>Delete User</button>
+        </div>
+      </div>
+
+      <div class="admin-section">
+        <div class="admin-section-title"><i class="ti ti-chart-bar"></i>Dashboard KPIs</div>
+        <div class="admin-stat-row">
+          <div class="admin-stat">
+            <div class="admin-stat-label">Net Worth</div>
+            <div class="admin-stat-val ${totalBal >= 0 ? 'pos' : 'neg'}">${fmt(totalBal)}</div>
+          </div>
+          <div class="admin-stat">
+            <div class="admin-stat-label">Total Budget</div>
+            <div class="admin-stat-val">${fmt(totalBudget)}</div>
+          </div>
+          <div class="admin-stat">
+            <div class="admin-stat-label">Total Spent</div>
+            <div class="admin-stat-val neg">${fmt(totalSpent)}</div>
+          </div>
+          <div class="admin-stat">
+            <div class="admin-stat-label">Accounts</div>
+            <div class="admin-stat-val">${user.accounts.length}</div>
+          </div>
+        </div>
+
+        <div class="admin-form-grid">
+          <div class="admin-form-group">
+            <label class="admin-form-label">Net Worth Value (EUR)</label>
+            <input class="admin-form-input" type="number" id="adminKpiNetWorth" value="${user.kpi.netWorth}" onchange="updateKpi('${user.id}','netWorth',this.value)">
+          </div>
+          <div class="admin-form-group">
+            <label class="admin-form-label">Net Worth Delta</label>
+            <input class="admin-form-input" id="adminKpiNetDelta" value="${user.kpi.netWorthDelta}" onchange="updateKpi('${user.id}','netWorthDelta',this.value)">
+          </div>
+          <div class="admin-form-group">
+            <label class="admin-form-label">Spent This Month (EUR)</label>
+            <input class="admin-form-input" type="number" id="adminKpiSpent" value="${user.kpi.spent}" onchange="updateKpi('${user.id}','spent',this.value)">
+          </div>
+          <div class="admin-form-group">
+            <label class="admin-form-label">Saved This Month (EUR)</label>
+            <input class="admin-form-input" type="number" id="adminKpiSaved" value="${user.kpi.saved}" onchange="updateKpi('${user.id}','saved',this.value)">
+          </div>
+          <div class="admin-form-group">
+            <label class="admin-form-label">Subscriptions (EUR)</label>
+            <input class="admin-form-input" type="number" id="adminKpiSubs" value="${user.kpi.subs}" onchange="updateKpi('${user.id}','subs',this.value)">
+          </div>
+          <div class="admin-form-group">
+            <label class="admin-form-label">Greeting</label>
+            <input class="admin-form-input" id="adminKpiGreeting" value="${user.greeting}" onchange="updateUserField('${user.id}','greeting',this.value)">
+          </div>
+        </div>
+        <div class="admin-actions">
+          <button class="btn-primary btn-small" onclick="saveKpiChanges('${user.id}')"><i class="ti ti-check" style="margin-right:4px"></i>Save KPIs</button>
+        </div>
+      </div>
+
+      <div class="admin-section">
+        <div class="admin-section-title"><i class="ti ti-wallet"></i>Accounts & Balances</div>
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Account Name</th>
+              <th>Type</th>
+              <th>Balance (EUR)</th>
+              <th>Color</th>
+              <th style="width:40px"></th>
+            </tr>
+          </thead>
+          <tbody>
+            ${user.accounts.map((a, i) => `
+              <tr>
+                <td><input value="${a.name}" onchange="updateAccount('${user.id}',${i},'name',this.value)"></td>
+                <td><input value="${a.type}" onchange="updateAccount('${user.id}',${i},'type',this.value)"></td>
+                <td><input type="number" value="${a.bal}" onchange="updateAccount('${user.id}',${i},'bal',this.value)"></td>
+                <td><input value="${a.color}" onchange="updateAccount('${user.id}',${i},'color',this.value)"></td>
+                <td><button class="btn-danger btn-small" onclick="deleteAccount('${user.id}',${i})" style="padding:4px 8px"><i class="ti ti-trash" style="font-size:12px"></i></button></td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+        <div class="admin-actions">
+          <button class="btn-primary btn-small" onclick="addAccount('${user.id}')"><i class="ti ti-plus" style="margin-right:4px"></i>Add Account</button>
+          <button class="btn-ghost btn-small" onclick="saveAccounts('${user.id}')"><i class="ti ti-check" style="margin-right:4px"></i>Save Accounts</button>
+        </div>
+      </div>
+
+      <div class="admin-section">
+        <div class="admin-section-title"><i class="ti ti-chart-pie"></i>Budgets</div>
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th>Spent (EUR)</th>
+              <th>Total (EUR)</th>
+              <th>Color</th>
+              <th style="width:40px"></th>
+            </tr>
+          </thead>
+          <tbody>
+            ${user.budgets.map((b, i) => `
+              <tr>
+                <td><input value="${b.name}" onchange="updateBudget('${user.id}',${i},'name',this.value)"></td>
+                <td><input type="number" value="${b.spent}" onchange="updateBudget('${user.id}',${i},'spent',this.value)"></td>
+                <td><input type="number" value="${b.total}" onchange="updateBudget('${user.id}',${i},'total',this.value)"></td>
+                <td><input value="${b.color}" onchange="updateBudget('${user.id}',${i},'color',this.value)"></td>
+                <td><button class="btn-danger btn-small" onclick="deleteBudget('${user.id}',${i})" style="padding:4px 8px"><i class="ti ti-trash" style="font-size:12px"></i></button></td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+        <div class="admin-actions">
+          <button class="btn-primary btn-small" onclick="addBudget('${user.id}')"><i class="ti ti-plus" style="margin-right:4px"></i>Add Budget</button>
+          <button class="btn-ghost btn-small" onclick="saveBudgets('${user.id}')"><i class="ti ti-check" style="margin-right:4px"></i>Save Budgets</button>
+        </div>
+      </div>
+
+      <div class="admin-section">
+        <div class="admin-section-title"><i class="ti ti-receipt"></i>Recent Transactions</div>
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Category</th>
+              <th>Date</th>
+              <th>Amount (EUR)</th>
+              <th style="width:40px"></th>
+            </tr>
+          </thead>
+          <tbody>
+            ${user.transactions.map((t, i) => `
+              <tr>
+                <td><input value="${t.name}" onchange="updateTransaction('${user.id}',${i},'name',this.value)"></td>
+                <td><input value="${t.cat}" onchange="updateTransaction('${user.id}',${i},'cat',this.value)"></td>
+                <td><input value="${t.date}" onchange="updateTransaction('${user.id}',${i},'date',this.value)"></td>
+                <td><input type="number" step="0.01" value="${t.amt}" onchange="updateTransaction('${user.id}',${i},'amt',this.value)"></td>
+                <td><button class="btn-danger btn-small" onclick="deleteTransaction('${user.id}',${i})" style="padding:4px 8px"><i class="ti ti-trash" style="font-size:12px"></i></button></td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+        <div class="admin-actions">
+          <button class="btn-primary btn-small" onclick="addTransaction('${user.id}')"><i class="ti ti-plus" style="margin-right:4px"></i>Add Transaction</button>
+          <button class="btn-ghost btn-small" onclick="saveTransactions('${user.id}')"><i class="ti ti-check" style="margin-right:4px"></i>Save Transactions</button>
+        </div>
+      </div>
+    `;
+  }
+}
+
+function selectAdminUser(userId) {
+  selectedAdminUserId = userId;
+  renderAdminPanel();
+}
+
+function updateUserField(userId, field, value) {
+  const user = usersData.find(u => u.id === userId);
+  if (user) user[field] = value;
+}
+
+function updateKpi(userId, field, value) {
+  const user = usersData.find(u => u.id === userId);
+  if (user && user.kpi) {
+    if (field === 'netWorth' || field === 'spent' || field === 'saved' || field === 'subs') {
+      user.kpi[field] = parseFloat(value) || 0;
+    } else {
+      user.kpi[field] = value;
+    }
+  }
+}
+
+function updateAccount(userId, index, field, value) {
+  const user = usersData.find(u => u.id === userId);
+  if (user && user.accounts[index]) {
+    if (field === 'bal') user.accounts[index][field] = parseFloat(value) || 0;
+    else user.accounts[index][field] = value;
+  }
+}
+
+function updateBudget(userId, index, field, value) {
+  const user = usersData.find(u => u.id === userId);
+  if (user && user.budgets[index]) {
+    if (field === 'spent' || field === 'total') user.budgets[index][field] = parseFloat(value) || 0;
+    else user.budgets[index][field] = value;
+  }
+}
+
+function updateTransaction(userId, index, field, value) {
+  const user = usersData.find(u => u.id === userId);
+  if (user && user.transactions[index]) {
+    if (field === 'amt') user.transactions[index][field] = parseFloat(value) || 0;
+    else user.transactions[index][field] = value;
+  }
+}
+
+function addAccount(userId) {
+  const user = usersData.find(u => u.id === userId);
+  if (user) {
+    user.accounts.push({name:'New Account',type:'Bank account',bal:0,color:'#4f8ef7'});
+    renderAdminPanel();
+  }
+}
+
+function addBudget(userId) {
+  const user = usersData.find(u => u.id === userId);
+  if (user) {
+    user.budgets.push({name:'New Category',spent:0,total:100,color:'#4f8ef7'});
+    renderAdminPanel();
+  }
+}
+
+function addTransaction(userId) {
+  const user = usersData.find(u => u.id === userId);
+  if (user) {
+    user.transactions.push({icon:'\u{1F4B8}',name:'New Transaction',cat:'Other',date:'Today',amt:0,bg:'rgba(79,142,247,.13)'});
+    renderAdminPanel();
+  }
+}
+
+function deleteAccount(userId, index) {
+  const user = usersData.find(u => u.id === userId);
+  if (user) { user.accounts.splice(index, 1); renderAdminPanel(); }
+}
+
+function deleteBudget(userId, index) {
+  const user = usersData.find(u => u.id === userId);
+  if (user) { user.budgets.splice(index, 1); renderAdminPanel(); }
+}
+
+function deleteTransaction(userId, index) {
+  const user = usersData.find(u => u.id === userId);
+  if (user) { user.transactions.splice(index, 1); renderAdminPanel(); }
+}
+
+function deleteUser(userId) {
+  if (!confirm('Are you sure you want to delete this user? This cannot be undone.')) return;
+  usersData = usersData.filter(u => u.id !== userId);
+  if (selectedAdminUserId === userId) selectedAdminUserId = null;
+  renderAdminPanel();
+  showToast('success', 'User deleted', 'User has been removed.');
+}
+
+function saveUserProfile(userId) { renderAdminPanel(); showToast('success', 'Profile saved', 'User profile updated.'); }
+function saveKpiChanges(userId) { renderAdminPanel(); showToast('success', 'KPIs saved', 'Dashboard KPIs updated.'); }
+function saveAccounts(userId) { renderAdminPanel(); showToast('success', 'Accounts saved', 'Account balances updated.'); }
+function saveBudgets(userId) { renderAdminPanel(); showToast('success', 'Budgets saved', 'Budgets updated.'); }
+function saveTransactions(userId) { renderAdminPanel(); showToast('success', 'Transactions saved', 'Transactions updated.'); }
+
+function viewAsUser(userId) {
+  const user = usersData.find(u => u.id === userId);
+  if (user) {
+    currentUser = user;
+    chartsReady = false;
+    showToast('info', 'Viewing as ' + user.name, 'You are now viewing this user dashboard.');
+    setTimeout(() => showView('dashboard'), 400);
+  }
+}
+
+function showAddUserModal() {
+  const name = prompt('Enter user full name:');
+  if (!name) return;
+  const email = prompt('Enter user email:');
+  if (!email) return;
+
+  const newUser = {
+    id: 'user_' + Date.now(),
+    name: name,
+    email: email,
+    avatar: name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0,2),
+    role: 'user',
+    status: 'offline',
+    plan: 'Free',
+    joined: new Date().toISOString().split('T')[0],
+    greeting: 'Hello, ' + name.split(' ')[0],
+    kpi: {
+      netWorth: 0, netWorthDelta: '+EUR0 this month', netWorthDeltaUp: true,
+      spent: 0, spentDelta: '0% vs last month', spentDeltaUp: true,
+      saved: 0, savedDelta: '+EUR0 vs May', savedDeltaUp: true,
+      subs: 0, subsLabel: '0 active services'
+    },
+    accounts: [], budgets: [], transactions: []
+  };
+
+  usersData.push(newUser);
+  selectedAdminUserId = newUser.id;
+  renderAdminPanel();
+  showToast('success', 'User created', name + ' has been added.');
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    const activeView = document.querySelector('.view.active');
+    if (!activeView) return;
+    if (activeView.id === 'view-auth') {
+      const signinVisible = document.getElementById('auth-signin').style.display !== 'none';
+      if (signinVisible) handleSignIn(); else handleSignUp();
+    }
+  }
+});
 </script>
 </body>
 </html>
