@@ -864,73 +864,84 @@ function showToast(type, title, message) {
   setTimeout(() => { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 4000);
 }
 
-function handleSignIn() {
-  const email = document.getElementById('signinEmail').value.trim();
-  const password = document.getElementById('signinPassword').value.trim();
+async function handleSignIn() {
+    const email = document.getElementById("signinEmail").value;
+    const password = document.getElementById("signinPassword").value;
 
-  if (email === 'admin@homebank.app' && password === 'admin123') {
-    isAdmin = true;
-    currentUser = { name: 'Admin', email: 'admin@homebank.app', role: 'admin' };
-    document.getElementById('adminNavBtn').style.display = 'inline-block';
-    showToast('success', 'Welcome Admin', 'Signed in as administrator.');
-    setTimeout(() => showView('admin'), 600);
-    return;
-  }
+    try {
+        const response = await fetch(
+            "https://homebank-backend-production.up.railway.app/api/auth/login",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ 
+                    email,
+                    password
+                })
+            }
+        );
 
-  if (!email || !password) {
-    showToast('error', 'Missing fields', 'Please enter both email and password.');
-    return;
-  }
+        const data = await response.json();
 
-  const user = usersData.find(u => u.email.toLowerCase() === email.toLowerCase());
-  if (user) {
-    currentUser = user;
-    isAdmin = false;
-    showToast('success', 'Welcome back!', 'Signed in as ' + user.name + '.');
-    setTimeout(() => showView('dashboard'), 600);
-  } else {
-    showToast('error', 'Account not found', 'No account found with that email. Try signing up.');
-  }
+        if (!response.ok) {
+            alert(data.message);
+            return;
+        }
+
+        localStorage.setItem("accessToken", data.data.accessToken);
+        localStorage.setItem("refreshToken", data.data.refreshToken);
+
+        alert("Login successful!");
+
+        showView("dashboard");
+
+    } catch (err) {
+        console.error(err);
+        alert("Server connection failed.");
+    }
 }
 
-function handleSignUp() {
-  const name = document.getElementById('signupName').value.trim();
-  const email = document.getElementById('signupEmail').value.trim();
-  const password = document.getElementById('signupPassword').value.trim();
+async function handleSignUp() {
+  const name = document.getElementById("signupName").value;
+  const email = document.getElementById("signupEmail").value;
+  const password = document.getElementById("signupPassword").value;
 
-  if (!name || !email || !password) {
-    showToast('error', 'Missing fields', 'Please fill in all fields.');
-    return;
+  try {
+    const response = await fetch(
+      "https://homebank-backend-production.up.railway.app/api/auth/register",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          password
+        })
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      alert(data.message);
+      return;
+    }
+
+    localStorage.setItem("accessToken", data.data.accessToken);
+    localStorage.setItem("refreshToken", data.data.refreshToken);
+
+    alert("Account created successfully!");
+
+    showView("dashboard");
+
+  } catch (err) {
+    console.error(err);
+    alert("Server connection failed.");
   }
-  if (password.length < 8) {
-    showToast('error', 'Password too short', 'Password must be at least 8 characters.');
-    return;
-  }
-
-  const newUser = {
-    id: 'user_' + Date.now(),
-    name: name,
-    email: email,
-    avatar: name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0,2),
-    role: 'user',
-    status: 'online',
-    plan: 'Free',
-    joined: new Date().toISOString().split('T')[0],
-    greeting: 'Hello, ' + name.split(' ')[0],
-    kpi: {
-      netWorth: 0, netWorthDelta: '+EUR0 this month', netWorthDeltaUp: true,
-      spent: 0, spentDelta: '0% vs last month', spentDeltaUp: true,
-      saved: 0, savedDelta: '+EUR0 vs May', savedDeltaUp: true,
-      subs: 0, subsLabel: '0 active services'
-    },
-    accounts: [], budgets: [], transactions: []
-  };
-
-  usersData.push(newUser);
-  currentUser = newUser;
-  isAdmin = false;
-  showToast('success', 'Account created!', 'Welcome to HomeBank, ' + name.split(' ')[0] + '!');
-  setTimeout(() => showView('dashboard'), 800);
 }
 
 function handleOAuth(provider) {
